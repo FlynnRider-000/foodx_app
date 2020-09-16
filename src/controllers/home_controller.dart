@@ -12,15 +12,18 @@ import '../models/market.dart';
 import '../models/product.dart';
 import '../models/review.dart';
 import '../models/field.dart';
+import '../models/slide.dart';
 import '../models/filter.dart';
 import '../repository/category_repository.dart';
 import '../repository/market_repository.dart';
 import '../repository/product_repository.dart';
 import '../repository/settings_repository.dart';
 import '../repository/field_repository.dart';
+import '../repository/slider_repository.dart';
 
 class HomeController extends ControllerMVC {
   List<Category> categories = <Category>[];
+  List<Slide> slides = <Slide>[];
   List<Market> topMarkets = <Market>[];
   List<Market> popularMarkets = <Market>[];
   List<Review> recentReviews = <Review>[];
@@ -31,6 +34,7 @@ class HomeController extends ControllerMVC {
   Filter filter;
 
   HomeController() {
+    listenForSlides();
     listenForFilter().whenComplete(() {
       listenForFields();
     });
@@ -41,7 +45,16 @@ class HomeController extends ControllerMVC {
 
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
   }
-
+	
+  Future<void> listenForSlides() async {
+    final Stream<Slide> stream = await getSlides();
+    stream.listen((Slide _slide) {
+      setState(() => slides.add(_slide));
+    }, onError: (a) {
+      print(a);
+    }, onDone: () {});
+  }
+  
   Future<void> listenForCategories() async {
     final Stream<Category> stream = await getCategories();
     stream.listen((Category _category) {
@@ -97,12 +110,14 @@ class HomeController extends ControllerMVC {
 
   Future<void> refreshHome() async {
     setState(() {
+      slides = <Slide>[];
       categories = <Category>[];
       topMarkets = <Market>[];
       popularMarkets = <Market>[];
       recentReviews = <Review>[];
       trendingProducts = <Product>[];
     });
+    await listenForSlides();
     await listenForTopMarkets();
     await listenForTrendingProducts();
     await listenForCategories();

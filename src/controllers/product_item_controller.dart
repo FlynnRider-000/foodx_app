@@ -81,7 +81,7 @@ class ProductItemController extends ControllerMVC {
     if (_oldCart != null) {
       _oldCart.quantity += this.quantity;
       updateCart(_oldCart).then((value) {
-        if(onLoadingCart != null) onLoadingFinishedCart(1);
+        onLoadingFinishedCart(1);
       }).whenComplete(() {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
           content: Text(S.of(context).this_product_was_added_to_cart),
@@ -90,7 +90,7 @@ class ProductItemController extends ControllerMVC {
     } else {
       // the product doesnt exist in the cart add new one
       addCart(_newCart, reset).then((value) {
-        if(onLoadingCart != null) onLoadingFinishedCart(1);
+        onLoadingFinishedCart(1);
       }).whenComplete(() {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
           content: Text(S.of(context).this_product_was_added_to_cart),

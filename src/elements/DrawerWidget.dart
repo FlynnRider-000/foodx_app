@@ -12,11 +12,7 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends StateMVC<DrawerWidget> {
-  //ProfileController _con;
-
-  _DrawerWidgetState() : super(ProfileController()) {
-    //_con = controller;
-  }
+  _DrawerWidgetState() : super(ProfileController()) {}
   @override
   void dispose() {
     super.dispose();

@@ -61,7 +61,6 @@ class SplashScreenController extends ControllerMVC {
   }
 
   Future notificationOnResume(Map<String, dynamic> message) async {
-    print(CustomTrace(StackTrace.current, message: message['data']['id']));
     try {
       if (message['data']['id'] == "orders") {
         settingRepo.navigatorKey.currentState.pushReplacementNamed('/Pages', arguments: 3);

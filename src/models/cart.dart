@@ -64,5 +64,5 @@ class Cart {
   }
 
   @override
-  int get hashCode => super.hashCode;
+  int get hashCode => this.id.hashCode;
 }

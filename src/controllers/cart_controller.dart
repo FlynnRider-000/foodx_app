@@ -3,6 +3,7 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:sprintf/sprintf.dart';
 
 import '../../generated/l10n.dart';
+import '../helpers/helper.dart';
 import '../models/cart.dart';
 import '../models/coupon.dart';
 import '../repository/cart_repository.dart';

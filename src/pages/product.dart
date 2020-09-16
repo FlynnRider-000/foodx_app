@@ -261,7 +261,7 @@ class _ProductWidgetState extends StateMVC<ProductWidget> {
                         : ShoppingCartFloatButtonWidget(
                             iconColor: Theme.of(context).primaryColor,
                             labelColor: Theme.of(context).hintColor,
-                            product: _con.product,
+                            routeArgument: RouteArgument(param: '/Product', id: _con.product.id),
                           ),
                   ),
                   Positioned(

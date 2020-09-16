@@ -343,6 +343,7 @@ class _DetailsWidgetState extends StateMVC<DetailsWidget> {
                       child: ShoppingCartFloatButtonWidget(
                         iconColor: Theme.of(context).primaryColor,
                         labelColor: Theme.of(context).hintColor,
+                        routeArgument: RouteArgument(param: '/Details', id: widget.routeArgument.id),
                       ),
                     ),
                   ],

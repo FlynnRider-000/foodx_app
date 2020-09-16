@@ -10,8 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import '../helpers/maps_util.dart';
 import '../../generated/l10n.dart';
-
-
+import '../models/user.dart';
 
 class ProfileSettingsDialog extends StatefulWidget {
   final User user;

@@ -14,12 +14,6 @@ class DeliveryPickupController extends CartController {
   PaymentMethodList list;
   TextEditingController check_note = new TextEditingController();
 
-  void initState() {
-    /*
-    settingRepo.initSettings();
-    settingRepo.getCurrentLocation();
-     */
-  }
 
   DeliveryPickupController() {
     this.scaffoldKey = new GlobalKey<ScaffoldState>();

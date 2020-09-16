@@ -37,7 +37,6 @@ Future<Stream<Market>> getNearMarkets(Address myLocation, Address areaLocation) 
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', uri));
-
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
       return Market.fromJSON(data);
     });
@@ -53,7 +52,7 @@ Future<Stream<Market>> getPopularMarkets(Address myLocation) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Filter filter = Filter.fromJSON(json.decode(prefs.getString('filter') ?? '{}'));
 
-  _queryParams['limit'] = '6';
+  _queryParams['limit'] = '4';
   _queryParams['popular'] = 'all';
   if (!myLocation.isUnknown()) {
     _queryParams['myLon'] = myLocation.longitude.toString();

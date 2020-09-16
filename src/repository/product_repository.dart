@@ -209,9 +209,7 @@ Future<Stream<Product>> getProductsOfMarket(String marketId, {List<String> categ
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', uri));
-    print(uri.toString());
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
-      print(data);
       return Product.fromJSON(data);
     });
   } catch (e) {

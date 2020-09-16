@@ -67,11 +67,11 @@ Future<dynamic> setCurrentLocation() async {
       }
       await changeCurrentLocation(_address);
       whenDone.complete(_address);
-    })./*timeout(Duration(seconds: 10), onTimeout: () async {
+    }).timeout(Duration(seconds: 10), onTimeout: () async {
       await changeCurrentLocation(_address);
       whenDone.complete(_address);
       return null;
-    }).*/catchError((e) {
+    }).catchError((e) {
       whenDone.complete(_address);
     });
   });

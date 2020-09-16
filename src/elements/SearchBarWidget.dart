@@ -15,7 +15,7 @@ class SearchBarWidget extends StatelessWidget {
         Navigator.of(context).push(SearchModal());
       },
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(9),
         decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
@@ -32,16 +32,37 @@ class SearchBarWidget extends StatelessWidget {
               child: Text(
                 S.of(context).search_for_markets_or_products,
                 maxLines: 1,
-                style: Theme.of(context).textTheme.caption.merge(TextStyle(fontSize: 14)),
+                softWrap: false,
+                overflow: TextOverflow.fade,
+                style: Theme.of(context).textTheme.caption.merge(TextStyle(fontSize: 12)),
               ),
             ),
+            SizedBox(width: 8),
             InkWell(
               onTap: () {
                 onClickFilter('e');
               },
-              child: Padding(
-                padding: const EdgeInsets.only(right: 5, left: 5, top: 3, bottom: 3),
-                child: Icon(Icons.filter_list, color: Theme.of(context).accentColor),
+              child: Container(
+                padding: const EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  color: Theme.of(context).focusColor.withOpacity(0.1),
+                ),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
+                  children: [
+                    Text(
+                      S.of(context).filter,
+                      style: TextStyle(color: Theme.of(context).hintColor),
+                    ),
+                    Icon(
+                      Icons.filter_list,
+                      color: Theme.of(context).hintColor,
+                      size: 21,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

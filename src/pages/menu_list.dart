@@ -51,6 +51,11 @@ class _MenuWidgetState extends StateMVC<MenuWidget> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back, color: Theme.of(context).hintColor),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           _con.products.isNotEmpty ? _con.products[0].market.name : '',
           overflow: TextOverflow.fade,
