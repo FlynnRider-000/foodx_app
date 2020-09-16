@@ -27,7 +27,7 @@ class Address {
   }
 
   bool isUnknown() {
-    return latitude == null || longitude == null || id == null || id == 'null';
+    return latitude == null || longitude == null;
   }
 
   Map toMap() {
