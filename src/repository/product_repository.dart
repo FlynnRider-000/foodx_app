@@ -97,10 +97,11 @@ Future<Stream<Product>> getProductsByCategory(categoryId) async {
 
   _queryParams = filter.toQuery(oldQuery: _queryParams);
   uri = uri.replace(queryParameters: _queryParams);
+  print('getProductsByCategory');
+  print(uri.toString());
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', uri));
-
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
       return Product.fromJSON(data);
     });
@@ -206,6 +207,7 @@ Future<Stream<Product>> getProductsOfMarket(String marketId, {List<String> categ
     query['categories[]'] = categories;
   }
   uri = uri.replace(queryParameters: query);
+  print(uri.toString());
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', uri));

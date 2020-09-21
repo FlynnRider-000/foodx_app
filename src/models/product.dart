@@ -5,6 +5,7 @@ import '../models/option.dart';
 import '../models/option_group.dart';
 import '../models/review.dart';
 import 'coupon.dart';
+import '../repository/order_repository.dart';
 
 class Product {
   String id;
@@ -102,6 +103,8 @@ class Product {
   int get hashCode => this.id.hashCode;
 
   Coupon applyCoupon(Coupon coupon) {
+    isCouponUsed = 0;
+    usedCoupon = '';
     if (coupon.code != '') {
       if (coupon.valid == null) {
         coupon.valid = false;
@@ -110,14 +113,20 @@ class Product {
         if (element.discountableType == "App\\Models\\Product") {
           if (element.discountableId == id) {
             coupon = _couponDiscountPrice(coupon);
+            usedCoupon = coupon.code;
+            isCouponUsed = 1;
           }
         } else if (element.discountableType == "App\\Models\\Market") {
           if (element.discountableId == market.id) {
             coupon = _couponDiscountPrice(coupon);
+            usedCoupon = coupon.code;
+            isCouponUsed = 1;
           }
         } else if (element.discountableType == "App\\Models\\Category") {
           if (element.discountableId == category.id) {
             coupon = _couponDiscountPrice(coupon);
+            usedCoupon = coupon.code;
+            isCouponUsed = 1;
           }
         }
       });

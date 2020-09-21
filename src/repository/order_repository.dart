@@ -13,6 +13,9 @@ import '../models/payment.dart';
 import '../models/user.dart';
 import '../repository/user_repository.dart' as userRepo;
 
+int isCouponUsed = 0;
+String usedCoupon = '';
+
 Future<Stream<Order>> getOrders() async {
   User _user = userRepo.currentUser.value;
   if (_user.apiToken == null) {
@@ -119,6 +122,11 @@ Future<Order> addOrder(Order order, Payment payment) async {
   Map params = order.toMap();
   params.addAll(_creditCard.toMap());
 
+  var couponMap = new Map<String, dynamic>();
+  couponMap["isCouponUsed"] = isCouponUsed;
+  couponMap["usedCoupon"] = usedCoupon;
+
+  params.addAll(couponMap);
   print("\n");
   print("--------------OrderRepository/addOrder-----------------");
   print(url);
@@ -130,8 +138,6 @@ Future<Order> addOrder(Order order, Payment payment) async {
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     body: json.encode(params),
   );
-
-  print(response.body);
 
   if(json.decode(response.body)['success'] == true)
     return Order.fromJSON(json.decode(response.body)['data']);
