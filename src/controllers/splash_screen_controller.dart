@@ -25,6 +25,7 @@ class SplashScreenController extends ControllerMVC {
   @override
   void initState() {
     super.initState();
+    firebaseMessaging.subscribeToTopic("broadCastMessage");
     firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(sound: true, badge: true, alert: true));
     configureFirebase(firebaseMessaging);
     settingRepo.setting.addListener(() {
