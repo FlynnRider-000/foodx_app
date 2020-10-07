@@ -152,6 +152,9 @@ class _ProductItemWidgetState extends StateMVC<ProductItemWidget> {
                           ? Helper.getPrice(widget.product.discountPrice, context,
                           style: Theme.of(context).textTheme.bodyText2.merge(TextStyle(decoration: TextDecoration.lineThrough)))
                           : SizedBox(height: 0),
+                      widget.product.capacity != '' && widget.product.capacity != null && widget.product.capacity != 'null'
+                          ? Text(widget.product.capacity + widget.product.unit, style: Theme.of(context).textTheme.bodyText2)
+                          : SizedBox(height: 0),
                       FlatButton(
                         onPressed: () async {
                           if (currentUser.value.apiToken == null) {
