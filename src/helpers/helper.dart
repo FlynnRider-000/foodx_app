@@ -145,6 +145,7 @@ class Helper {
   }
 
   static double getTotalOrderPrice(ProductOrder productOrder) {
+
     double total = productOrder.price;
     productOrder.options.forEach((option) {
       total += option.price != null ? option.price : 0;
@@ -174,8 +175,8 @@ class Helper {
     order.productOrders.forEach((productOrder) {
       total += getTotalOrderPrice(productOrder);
     });
-    total += order.deliveryFee;
     total += order.tax * total / 100;
+    total += order.deliveryFee;
     return total;
   }
 

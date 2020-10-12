@@ -69,7 +69,9 @@ class CheckoutController extends CartController {
         _order.deliveryFee = carts[0].product.market.deliveryFee;
     }
 
-    total = subTotal + _order.deliveryFee;
+    total = subTotal;
+    total += subTotal * _order.tax / 100;
+    total += _order.deliveryFee;
     deliveryFee = _order.deliveryFee;
 
     orderRepo.addOrder(_order, this.payment).then((value) async{
