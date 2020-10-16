@@ -170,7 +170,6 @@ Future<Stream<Review>> getRecentReviews() async {
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', Uri.parse(url)));
-    print(streamedRest.statusCode);
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
       return Review.fromJSON(data);
     });

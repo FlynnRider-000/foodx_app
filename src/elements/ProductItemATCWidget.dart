@@ -112,6 +112,7 @@ class _ProductItemWidgetState extends StateMVC<ProductItemWidget> {
                           maxLines: 2,
                           style: Theme.of(context).textTheme.caption,
                         ),
+                        widget.product.outOfStock == true ? Row() :
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -160,37 +161,43 @@ class _ProductItemWidgetState extends StateMVC<ProductItemWidget> {
                           if (currentUser.value.apiToken == null) {
                             Navigator.of(context).pushNamed("/Login");
                           } else {
-                            widget.onLoadingCart(1);
-                            await _con.listenForProduct(productId: widget.product.id);
-                            await _con.listenForCart();
-                            if (_con.isSameMarkets(_con.product)) {
-                              _con.addToCart(_con.product);
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AddToCartAlertDialogWidget(
-                                    oldProduct: _con.carts.elementAt(0)?.product,
-                                    newProduct: _con.product,
-                                    onPressed: (product, {reset: true}) {
-                                      return _con.addToCart(_con.product, reset: true);
-                                    },
-                                    onCancelled: (){
-                                      widget.onLoadingFinishedCart(1);
-                                    },);
-                                },
-                              );
+                            if (widget.product.outOfStock == false) {
+                              widget.onLoadingCart(1);
+                              await _con.listenForProduct(
+                                  productId: widget.product.id);
+                              await _con.listenForCart();
+                              if (_con.isSameMarkets(_con.product)) {
+                                _con.addToCart(_con.product);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    // return object of type Dialog
+                                    return AddToCartAlertDialogWidget(
+                                      oldProduct: _con.carts
+                                          .elementAt(0)
+                                          ?.product,
+                                      newProduct: _con.product,
+                                      onPressed: (product, {reset: true}) {
+                                        return _con.addToCart(
+                                            _con.product, reset: true);
+                                      },
+                                      onCancelled: () {
+                                        widget.onLoadingFinishedCart(1);
+                                      },);
+                                  },
+                                );
+                              }
                             }
                           }
                         },
                         padding: EdgeInsets.symmetric(vertical: 10),
-                        color: Theme.of(context).accentColor,
+                        color: widget.product.outOfStock == false ? Theme.of(context).accentColor : Colors.redAccent,
                         shape: StadiumBorder(),
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            S.of(context).add_to_cart,
+                            widget.product.outOfStock == false ? S.of(context).add_to_cart : 'Out of Stock',
                             textAlign: TextAlign.start,
                             style: TextStyle(color: Theme.of(context).primaryColor),
                           ),

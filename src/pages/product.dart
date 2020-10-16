@@ -53,7 +53,7 @@ class _ProductWidgetState extends StateMVC<ProductWidget> {
                 fit: StackFit.expand,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(bottom: 125),
+                    margin: EdgeInsets.only(bottom: _con.product.outOfStock == false ? 125 : 15),
                     padding: EdgeInsets.only(bottom: 15),
                     child: CustomScrollView(
                       primary: true,
@@ -264,7 +264,7 @@ class _ProductWidgetState extends StateMVC<ProductWidget> {
                             routeArgument: RouteArgument(param: '/Product', id: _con.product.id),
                           ),
                   ),
-                  Positioned(
+                  _con.product.outOfStock == false ? Positioned(
                     bottom: 0,
                     child: Container(
                       height: 150,
@@ -407,7 +407,7 @@ class _ProductWidgetState extends StateMVC<ProductWidget> {
                         ),
                       ),
                     ),
-                  )
+                  ) : Row()
                 ],
               ),
             ),

@@ -20,6 +20,7 @@ class Product {
   String packageItemsCount;
   bool featured;
   bool deliverable;
+  bool outOfStock;
   Market market;
   Category category;
   List<Option> options;
@@ -41,6 +42,7 @@ class Product {
       unit = jsonMap['unit'] != null ? jsonMap['unit'].toString() : '';
       packageItemsCount = jsonMap['package_items_count'].toString();
       featured = jsonMap['featured'] ?? false;
+      outOfStock = jsonMap['out_of_stock'] ?? false;
       deliverable = jsonMap['deliverable'] ?? false;
       market = jsonMap['market'] != null ? Market.fromJSON(jsonMap['market']) : Market.fromJSON({});
       category = jsonMap['category'] != null ? Category.fromJSON(jsonMap['category']) : Category.fromJSON({});
@@ -65,6 +67,7 @@ class Product {
       packageItemsCount = '';
       featured = false;
       deliverable = false;
+      outOfStock = false;
       market = Market.fromJSON({});
       category = Category.fromJSON({});
       image = new Media();
