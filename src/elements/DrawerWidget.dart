@@ -107,7 +107,11 @@ class _DrawerWidgetState extends StateMVC<DrawerWidget> {
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushNamed('/MobileVerification');
+              if (currentUser.value.apiToken != null) {
+                Navigator.of(context).pushNamed('/MobileVerification');
+              } else {
+                Navigator.of(context).pushReplacementNamed('/Login');
+              }
             },
             leading: Icon(
               Icons.lock,
