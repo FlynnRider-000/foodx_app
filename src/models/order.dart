@@ -17,6 +17,7 @@ class Order {
   String checkout_note;
   Payment payment;
   Address deliveryAddress;
+  double total;
 
   Order();
 
@@ -34,6 +35,7 @@ class Order {
       deliveryAddress = jsonMap['delivery_address'] != null ? Address.fromJSON(jsonMap['delivery_address']) : Address.fromJSON({});
       payment = jsonMap['payment'] != null ? Payment.fromJSON(jsonMap['payment']) : Payment.fromJSON({});
       productOrders = jsonMap['product_orders'] != null ? List.from(jsonMap['product_orders']).map((element) => ProductOrder.fromJSON(element)).toList() : [];
+      total = 0;
     } catch (e) {
       id = '';
       tax = 0.0;
@@ -47,6 +49,7 @@ class Order {
       payment = Payment.fromJSON({});
       deliveryAddress = Address.fromJSON({});
       productOrders = [];
+      total = 0;
     }
   }
 
@@ -61,6 +64,7 @@ class Order {
     map["products"] = productOrders?.map((element) => element.toMap())?.toList();
     map["payment"] = payment?.toMap();
     map["check_out_note"] = checkout_note;
+    map["total"] = total;
     if (!deliveryAddress.isUnknown()) {
       map["delivery_address_id"] = deliveryAddress?.id;
     }

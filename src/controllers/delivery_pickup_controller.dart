@@ -82,13 +82,19 @@ class DeliveryPickupController extends CartController {
   }
 
   PaymentMethod getSelectedMethod() {
-    return list.pickupList.firstWhere((element) => element.selected);
+    return list.pickupList.firstWhere((element) => element.selected, orElse: () => null);
   }
 
   @override
   void goCheckout(BuildContext context) {
     CartController.checkout_note = check_note.text == "" ? " " : check_note.text;
-    Navigator.of(context).pushNamed(getSelectedMethod().route);
+    PaymentMethod pm = getSelectedMethod();
+    if (pm != null)
+      Navigator.of(context).pushNamed(getSelectedMethod().route);
+    else
+      scaffoldKey?.currentState?.showSnackBar(SnackBar(
+        content: Text("Please Confirm your address"),
+      ));
   }
 
   void requestForCurrentLocation(BuildContext context) {

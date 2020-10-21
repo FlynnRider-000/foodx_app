@@ -94,16 +94,23 @@ class CartController extends ControllerMVC {
   }
 
   void calculateSubtotal() async {
+
+    double cartPrice = 0;
     subTotal = 0;
     carts.forEach((cart) {
-      double productAmount = cart.product.price * cart.quantity;
-      subTotal += productAmount;
+      cartPrice = cart.product.price;
+      cart.options.forEach((element) {
+        cartPrice += element.price;
+      });
+      cartPrice *= cart.quantity;
+      subTotal += cartPrice;
     });
-    /*if (Helper.canDelivery(carts[0].product.market, carts: carts)) {
+    deliveryFee = 0;
+    if (Helper.canDelivery(carts[0].product.market, carts: carts) && carts[0].product.market.shipping_method == 1 &&
+        carts[0].product.market.free_shipping == false && subTotal < carts[0].product.market.mini_order) {
       deliveryFee = carts[0].product.market.deliveryFee;
-    }*/
-    //deliveryFee = subTotal < carts[0].product.market.mini_order ? carts[0].product.market.deliveryFee : 0;
-    taxAmount = (subTotal + deliveryFee) * carts[0].product.market.defaultTax / 100;
+    }
+    taxAmount = subTotal * carts[0].product.market.defaultTax / 100;
     total = subTotal + taxAmount + deliveryFee;
     setState(() {});
   }
@@ -140,12 +147,17 @@ class CartController extends ControllerMVC {
   }
 
   void goCheckout(BuildContext context) {
-    int flag = 0;
-    double sum = 0;
-    int limit = carts[0].product.market.mini_order;
-    for (int i = 0; i < carts.length; i++)
-      sum += carts[i].product.price * carts[i].quantity;
 
+    if (currentUser.value.phoneVerified != 1) {
+      scaffoldKey?.currentState?.showSnackBar(SnackBar(
+          content: Text('You have to do OTP verification before placing order \n\n Please check left sidebar for OTP verification')
+      ));
+      return;
+    }
+
+    double sum = subTotal;
+    int flag = 0;
+    int limit = carts[0].product.market.mini_order;
     /*if (carts[0].product.market.shipping_method == 0) {//FreeShipping
       if(carts[0].product.market.free_shipping == false) {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(

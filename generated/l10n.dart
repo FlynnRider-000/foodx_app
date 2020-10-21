@@ -2492,6 +2492,16 @@ class S {
       args: [],
     );
   }
+
+  /// `OTP Verification?`
+  String get otp_verification {
+    return Intl.message(
+      'OTP Verification',
+      name: 'otp_verification',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

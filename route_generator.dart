@@ -13,6 +13,8 @@ import 'src/pages/help.dart';
 import 'src/pages/languages.dart';
 import 'src/pages/login.dart';
 import 'src/pages/menu_list.dart';
+import 'src/pages/mobile_verification.dart';
+import 'src/pages/mobile_verification_2.dart';
 import 'src/pages/order_success.dart';
 import 'src/pages/pages.dart';
 import 'src/pages/payment_methods.dart';
@@ -42,9 +44,9 @@ class RouteGenerator {
       case '/SignUp':
         return MaterialPageRoute(builder: (_) => SignUpWidget());
       case '/MobileVerification':
-        return MaterialPageRoute(builder: (_) => SignUpWidget());
+        return MaterialPageRoute(builder: (_) => MobileVerification());
       case '/MobileVerification2':
-        return MaterialPageRoute(builder: (_) => SignUpWidget());
+        return MaterialPageRoute(builder: (_) => MobileVerification2(routeArgument: args as RouteArgument));
       case '/Login':
         return MaterialPageRoute(builder: (_) => LoginWidget());
       case '/Profile':

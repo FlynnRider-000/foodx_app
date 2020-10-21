@@ -57,8 +57,14 @@ class CheckoutController extends CartController {
       _productOrder.price = _cart.product.price;
       _productOrder.product = _cart.product;
       _productOrder.options = _cart.options;
+
+      double cc = _productOrder.price;
+      _productOrder.options.forEach((element) {
+        cc += element.price;
+      });
+      subTotal += cc * _productOrder.quantity;
+
       _order.productOrders.add(_productOrder);
-      subTotal += _productOrder.quantity * _productOrder.price;
     });
 
     if(payment.method != 'Pay on Pickup') {
@@ -73,8 +79,7 @@ class CheckoutController extends CartController {
     total += subTotal * _order.tax / 100;
     total += _order.deliveryFee;
     deliveryFee = _order.deliveryFee;
-
-    orderRepo.addOrder(_order, this.payment).then((value) async{
+    orderRepo.addOrder(_order, this.payment, total).then((value) async{
       settingRepo.coupon = new Coupon.fromJSON({});
       return value;
     }).then((value) {

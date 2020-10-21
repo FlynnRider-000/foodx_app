@@ -107,6 +107,19 @@ class _DrawerWidgetState extends StateMVC<DrawerWidget> {
           ),
           ListTile(
             onTap: () {
+              Navigator.of(context).pushNamed('/MobileVerification');
+            },
+            leading: Icon(
+              Icons.lock,
+              color: Theme.of(context).focusColor.withOpacity(1),
+            ),
+            title: Text(
+              S.of(context).otp_verification,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          ListTile(
+            onTap: () {
               Navigator.of(context).pushNamed('/Pages', arguments: 4);
             },
             leading: Icon(

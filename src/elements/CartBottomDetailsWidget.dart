@@ -50,11 +50,7 @@ class CartBottomDetailsWidget extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
-                      if (_con.carts[0].product.market.shipping_method == 1 && _con.carts[0].product.market.free_shipping == false && _con.subTotal < _con.carts[0].product.market.mini_order && _con.parentWidgetType == 1)
-                        Helper.getPrice(_con.carts[0].product.market.deliveryFee, context,
-                            style: Theme.of(context).textTheme.subtitle1, zeroPlaceholder: 'Free')
-                      else
-                        Helper.getPrice(0, context, style: Theme.of(context).textTheme.subtitle1, zeroPlaceholder: 'Free')
+                      Helper.getPrice(_con.deliveryFee, context, style: Theme.of(context).textTheme.subtitle1, zeroPlaceholder: 'Free')
                     ],
                   ),
                   Row(
@@ -93,8 +89,7 @@ class CartBottomDetailsWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Helper.getPrice(
-                          (_con.carts[0].product.market.shipping_method == 1 && _con.carts[0].product.market.free_shipping == false && _con.subTotal < _con.carts[0].product.market.mini_order && _con.parentWidgetType == 1) ?
-                            _con.total + _con.carts[0].product.market.deliveryFee: _con.total,
+                          _con.total,
                           context,
                           style: Theme.of(context).textTheme.headline4.merge(TextStyle(color: Theme.of(context).primaryColor)),
                           zeroPlaceholder: 'Free'

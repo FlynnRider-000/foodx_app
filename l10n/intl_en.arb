@@ -244,5 +244,6 @@
   "your_order_has_not_been_submitted": "Your order has not been submitted!",
   "validCouponCode": "Valid Coupon",
   "invalidCouponCode": "Invalid Coupon",
-  "haveCouponCode": "Have Coupon Code?"
+  "haveCouponCode": "Have Coupon Code?",
+  "otp_verification": "OTP Verification",
 }

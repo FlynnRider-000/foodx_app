@@ -6,6 +6,7 @@ class User {
   String name;
   String email;
   String password;
+  int phoneVerified;
   String apiToken;
   String deviceToken;
   String phone;
@@ -26,6 +27,7 @@ class User {
       id = jsonMap['id'].toString();
       name = jsonMap['name'] != null ? jsonMap['name'] : '';
       email = jsonMap['email'] != null ? jsonMap['email'] : '';
+      phoneVerified = jsonMap['phone_verified'] != null ? jsonMap['phone_verified'] : 0;
       apiToken = jsonMap['api_token'];
       deviceToken = jsonMap['device_token'];
       try {
@@ -59,6 +61,7 @@ class User {
     map["id"] = id;
     map["email"] = email;
     map["name"] = name;
+    map["phone_verified"] = phoneVerified;
     map["password"] = password;
     map["api_token"] = apiToken;
     if (deviceToken != null) {

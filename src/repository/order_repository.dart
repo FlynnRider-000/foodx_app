@@ -108,7 +108,7 @@ Future<Stream<OrderStatus>> getOrderStatus() async {
   });
 }
 
-Future<Order> addOrder(Order order, Payment payment) async {
+Future<Order> addOrder(Order order, Payment payment, double total) async {
   User _user = userRepo.currentUser.value;
   if (_user.apiToken == null) {
     return new Order();
@@ -116,6 +116,7 @@ Future<Order> addOrder(Order order, Payment payment) async {
   CreditCard _creditCard = await userRepo.getCreditCard();
   order.user = _user;
   order.payment = payment;
+  order.total = total;
   final String _apiToken = 'api_token=${_user.apiToken}';
   final String url = '${GlobalConfiguration().getString('api_base_url')}orders?$_apiToken';
   final client = new http.Client();

@@ -116,6 +116,9 @@ Future<User> update(User user) async {
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     body: json.encode(user.toMap()),
   );
+  print("Asdfafdsfdsafdsafds");
+  print(url);
+  print(json.encode(user.toMap()));
   setCurrentUser(response.body);
   currentUser.value = User.fromJSON(json.decode(response.body)['data']);
   return currentUser.value;
