@@ -62,6 +62,12 @@ class SplashScreenState extends StateMVC<SplashScreen> {
               CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).hintColor),
               ),
+              SizedBox(height: 50),
+              Text(
+                'Please enable your location service\nWe will capture your location',
+                style: Theme.of(context).textTheme.headline6.merge(TextStyle(letterSpacing: 1.3)),
+                textAlign: TextAlign.center,
+              )
             ],
           ),
         ),
