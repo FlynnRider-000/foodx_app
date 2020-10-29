@@ -114,5 +114,6 @@ class ConfirmAllowLocationController extends ControllerMVC {
         );
       }
     }
+    return whenDone.future;
   }
 }
