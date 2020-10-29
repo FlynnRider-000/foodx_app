@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -58,26 +59,82 @@ Future<dynamic> setCurrentLocation() async {
   MapsUtil mapsUtil = new MapsUtil();
   final whenDone = new Completer();
   Address _address = new Address();
-  location.requestService().then((value) async {
-    try {
-      LocationData _locationData = await location.getLocation();
-      String _addressName = await mapsUtil.getAddressName(
-          new LatLng(_locationData?.latitude, _locationData?.longitude),
-          setting.value.googleMapsKey);
-      _address = Address.fromJSON({
-        'address': _addressName,
-        'latitude': _locationData?.latitude,
-        'longitude': _locationData?.longitude
-      });
-      if (userRepo.currentUser.value.apiToken != null) {
-        _address = await userRepo.addAddress(_address);
+  if (Platform.isAndroid) {
+    location.requestService().then((value) async {
+      try {
+        LocationData _locationData = await location.getLocation();
+        String _addressName = await mapsUtil.getAddressName(
+            new LatLng(_locationData?.latitude, _locationData?.longitude),
+            setting.value.googleMapsKey);
+        _address = Address.fromJSON({
+          'address': _addressName,
+          'latitude': _locationData?.latitude,
+          'longitude': _locationData?.longitude
+        });
+        if (userRepo.currentUser.value.apiToken != null) {
+          _address = await userRepo.addAddress(_address);
+        }
+        await changeCurrentLocation(_address);
+        whenDone.complete(_address);
+      } catch (e) {
+        whenDone.complete(_address);
       }
-      await changeCurrentLocation(_address);
-      whenDone.complete(_address);
-    } catch (e) {
-      whenDone.complete(_address);
+    });
+  } else if (Platform.isIOS) {
+    bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
+    if (isEnabled) {
+      location.requestService().then((value) async {
+        try {
+          LocationData _locationData = await location.getLocation();
+          String _addressName = await mapsUtil.getAddressName(
+              new LatLng(_locationData?.latitude, _locationData?.longitude),
+              setting.value.googleMapsKey);
+          _address = Address.fromJSON({
+            'address': _addressName,
+            'latitude': _locationData?.latitude,
+            'longitude': _locationData?.longitude
+          });
+          if (userRepo.currentUser.value.apiToken != null) {
+            _address = await userRepo.addAddress(_address);
+          }
+          await changeCurrentLocation(_address);
+          whenDone.complete(_address);
+        } catch (e) {
+          whenDone.complete(_address);
+        }
+      });
+    } else {
+      Widget cancelButton = FlatButton(
+        child: Text("Don't Allow"),
+        onPressed: () {
+          Navigator.of(navigatorKey.currentContext).pop();
+          whenDone.complete(_address);
+        },
+      );
+      Widget allowButton = FlatButton(
+        child: Text("Allow"),
+        onPressed: () {
+          Navigator.of(navigatorKey.currentContext).pop();
+          exit(0);
+        },
+      );
+      AlertDialog alert = AlertDialog(
+        title: Text("We would like to access your location"),
+        content: Text(
+            "We will capture your location and list restaurants nearby you\n Please open Settings and enable location service"),
+        actions: [
+          cancelButton,
+          allowButton,
+        ],
+      );
+      showDialog(
+          context: navigatorKey.currentContext,
+          builder: (BuildContext context) {
+            return alert;
+          }
+      );
     }
-  });
+  }
   return whenDone.future;
 }
 
