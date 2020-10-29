@@ -59,29 +59,23 @@ Future<dynamic> setCurrentLocation() async {
   final whenDone = new Completer();
   Address _address = new Address();
   location.requestService().then((value) async {
-    bool hasPermission = (await location.hasPermission() == PermissionStatus.granted) && await location.serviceEnabled();
-    if (hasPermission) {
-      location.getLocation().then((_locationData) async {
-        String _addressName = await mapsUtil.getAddressName(
-            new LatLng(_locationData?.latitude, _locationData?.longitude),
-            setting.value.googleMapsKey);
-        _address = Address.fromJSON({
-          'address': _addressName,
-          'latitude': _locationData?.latitude,
-          'longitude': _locationData?.longitude
-        });
-        if (userRepo.currentUser.value.apiToken != null) {
-          _address = await userRepo.addAddress(_address);
-        }
-        await changeCurrentLocation(_address);
-        whenDone.complete(_address);
-      }).catchError((e) {
-        whenDone.complete(_address);
+    location.getLocation().then((_locationData) async {
+      String _addressName = await mapsUtil.getAddressName(
+          new LatLng(_locationData?.latitude, _locationData?.longitude),
+          setting.value.googleMapsKey);
+      _address = Address.fromJSON({
+        'address': _addressName,
+        'latitude': _locationData?.latitude,
+        'longitude': _locationData?.longitude
       });
-    }
-    else {
+      if (userRepo.currentUser.value.apiToken != null) {
+        _address = await userRepo.addAddress(_address);
+      }
+      await changeCurrentLocation(_address);
       whenDone.complete(_address);
-    }
+    }).catchError((e) {
+      whenDone.complete(_address);
+    });
   });
   return whenDone.future;
 }

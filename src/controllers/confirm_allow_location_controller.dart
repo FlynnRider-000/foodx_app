@@ -58,10 +58,15 @@ class ConfirmAllowLocationController extends ControllerMVC {
     MapsUtil mapsUtil = new MapsUtil();
 
     await location.requestService();
-    LocationData abc = await location.getLocation();
-    String _addressName = await mapsUtil.getAddressName(new LatLng(abc.latitude, abc.longitude), setting['google_maps_key']);
-    cur_location = _addressName;
-    latitude = abc.latitude;
-    longitude = abc.longitude;
+    try {
+      LocationData abc = await location.getLocation();
+      String _addressName = await mapsUtil.getAddressName(
+          new LatLng(abc.latitude, abc.longitude), setting['google_maps_key']);
+      cur_location = _addressName;
+      latitude = abc.latitude;
+      longitude = abc.longitude;
+    } catch (e) {
+      cur_location = null;
+    }
   }
 }
