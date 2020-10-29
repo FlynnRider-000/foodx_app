@@ -59,7 +59,8 @@ Future<dynamic> setCurrentLocation() async {
   final whenDone = new Completer();
   Address _address = new Address();
   location.requestService().then((value) async {
-    location.getLocation().then((_locationData) async {
+    try {
+      LocationData _locationData = await location.getLocation();
       String _addressName = await mapsUtil.getAddressName(
           new LatLng(_locationData?.latitude, _locationData?.longitude),
           setting.value.googleMapsKey);
@@ -73,9 +74,9 @@ Future<dynamic> setCurrentLocation() async {
       }
       await changeCurrentLocation(_address);
       whenDone.complete(_address);
-    }).catchError((e) {
+    } catch (e) {
       whenDone.complete(_address);
-    });
+    }
   });
   return whenDone.future;
 }
