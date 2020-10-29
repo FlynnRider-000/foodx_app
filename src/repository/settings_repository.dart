@@ -83,26 +83,24 @@ Future<dynamic> setCurrentLocation() async {
   } else if (Platform.isIOS) {
     bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
     if (isEnabled) {
-      location.requestService().then((value) async {
-        try {
-          LocationData _locationData = await location.getLocation();
-          String _addressName = await mapsUtil.getAddressName(
-              new LatLng(_locationData?.latitude, _locationData?.longitude),
-              setting.value.googleMapsKey);
-          _address = Address.fromJSON({
-            'address': _addressName,
-            'latitude': _locationData?.latitude,
-            'longitude': _locationData?.longitude
-          });
-          if (userRepo.currentUser.value.apiToken != null) {
-            _address = await userRepo.addAddress(_address);
-          }
-          await changeCurrentLocation(_address);
-          whenDone.complete(_address);
-        } catch (e) {
-          whenDone.complete(_address);
+      try {
+        LocationData _locationData = await location.getLocation();
+        String _addressName = await mapsUtil.getAddressName(
+            new LatLng(_locationData?.latitude, _locationData?.longitude),
+            setting.value.googleMapsKey);
+        _address = Address.fromJSON({
+          'address': _addressName,
+          'latitude': _locationData?.latitude,
+          'longitude': _locationData?.longitude
+        });
+        if (userRepo.currentUser.value.apiToken != null) {
+          _address = await userRepo.addAddress(_address);
         }
-      });
+        await changeCurrentLocation(_address);
+        whenDone.complete(_address);
+      } catch (e) {
+        whenDone.complete(_address);
+      }
     } else {
       Widget cancelButton = FlatButton(
         child: Text("Don't Allow"),
