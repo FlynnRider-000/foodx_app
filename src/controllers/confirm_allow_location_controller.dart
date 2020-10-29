@@ -101,7 +101,7 @@ class ConfirmAllowLocationController extends ControllerMVC {
         AlertDialog alert = AlertDialog(
           title: Text("We would like to access your location"),
           content: Text(
-              "We will capture your location and list restaurants nearby you\n Please open Settings and enable location service"),
+              "We will capture your location and list nearby Stores\nPlease open Settings and enable location service"),
           actions: [
             allowButton,
           ],
