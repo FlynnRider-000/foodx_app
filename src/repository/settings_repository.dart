@@ -81,57 +81,91 @@ Future<dynamic> setCurrentLocation() async {
       }
     });
   } else if (Platform.isIOS) {
-    bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
-    if (isEnabled) {
-      try {
-        LocationData _locationData = await location.getLocation();
-        String _addressName = await mapsUtil.getAddressName(
-            new LatLng(_locationData?.latitude, _locationData?.longitude),
-            setting.value.googleMapsKey);
-        _address = Address.fromJSON({
-          'address': _addressName,
-          'latitude': _locationData?.latitude,
-          'longitude': _locationData?.longitude
-        });
-        if (userRepo.currentUser.value.apiToken != null) {
-          _address = await userRepo.addAddress(_address);
-        }
-        await changeCurrentLocation(_address);
-        whenDone.complete(_address);
-      } catch (e) {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
         whenDone.complete(_address);
       }
-    } else {
-      Widget cancelButton = FlatButton(
-        child: Text("Don't Allow"),
-        onPressed: () {
-          Navigator.of(navigatorKey.currentContext).pop();
-          whenDone.complete(_address);
-        },
-      );
-      Widget allowButton = FlatButton(
-        child: Text("Allow"),
-        onPressed: () {
-          Navigator.of(navigatorKey.currentContext).pop();
-          exit(0);
-        },
-      );
-      AlertDialog alert = AlertDialog(
-        title: Text("We would like to access your location"),
-        content: Text(
-            "We will capture your location and list restaurants nearby you\n Please open Settings and enable location service"),
-        actions: [
-          cancelButton,
-          allowButton,
-        ],
-      );
-      showDialog(
-          context: navigatorKey.currentContext,
-          builder: (BuildContext context) {
-            return alert;
-          }
-      );
     }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        whenDone.complete(_address);
+      }
+    }
+
+    _locationData = await location.getLocation();
+    String _addressName = await mapsUtil.getAddressName(
+        new LatLng(_locationData?.latitude, _locationData?.longitude),
+        setting.value.googleMapsKey);
+    _address = Address.fromJSON({
+      'address': _addressName,
+      'latitude': _locationData?.latitude,
+      'longitude': _locationData?.longitude
+    });
+    if (userRepo.currentUser.value.apiToken != null) {
+      _address = await userRepo.addAddress(_address);
+    }
+    await changeCurrentLocation(_address);
+    whenDone.complete(_address);
+    // bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
+    // if (isEnabled) {
+    //   try {
+    //     LocationData _locationData = await location.getLocation();
+    //     String _addressName = await mapsUtil.getAddressName(
+    //         new LatLng(_locationData?.latitude, _locationData?.longitude),
+    //         setting.value.googleMapsKey);
+    //     _address = Address.fromJSON({
+    //       'address': _addressName,
+    //       'latitude': _locationData?.latitude,
+    //       'longitude': _locationData?.longitude
+    //     });
+    //     if (userRepo.currentUser.value.apiToken != null) {
+    //       _address = await userRepo.addAddress(_address);
+    //     }
+    //     await changeCurrentLocation(_address);
+    //     whenDone.complete(_address);
+    //   } catch (e) {
+    //     whenDone.complete(_address);
+    //   }
+    // } else {
+    //   Widget cancelButton = FlatButton(
+    //     child: Text("Don't Allow"),
+    //     onPressed: () {
+    //       Navigator.of(navigatorKey.currentContext).pop();
+    //       whenDone.complete(_address);
+    //     },
+    //   );
+    //   Widget allowButton = FlatButton(
+    //     child: Text("Allow"),
+    //     onPressed: () {
+    //       Navigator.of(navigatorKey.currentContext).pop();
+    //       exit(0);
+    //     },
+    //   );
+    //   AlertDialog alert = AlertDialog(
+    //     title: Text("We would like to access your location"),
+    //     content: Text(
+    //         "We will capture your location and list restaurants nearby you\n Please open Settings and enable location service"),
+    //     actions: [
+    //       cancelButton,
+    //       allowButton,
+    //     ],
+    //   );
+    //   showDialog(
+    //       context: navigatorKey.currentContext,
+    //       builder: (BuildContext context) {
+    //         return alert;
+    //       }
+    //   );
+    // }
   }
   return whenDone.future;
 }
