@@ -8,6 +8,7 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_settings/app_settings.dart';
 
 import '../helpers/maps_util.dart';
 import '../helpers/helper.dart';
@@ -95,6 +96,7 @@ class ConfirmAllowLocationController extends ControllerMVC {
           child: Text("Allow"),
           onPressed: () {
             Navigator.of(navigatorKey.currentContext).pop();
+            AppSettings.openLocationSettings();
             exit(0);
           },
         );
