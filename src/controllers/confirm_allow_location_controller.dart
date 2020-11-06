@@ -80,31 +80,39 @@ class ConfirmAllowLocationController extends ControllerMVC {
       bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
       if (isEnabled) {
         try {
-          LocationData abc = await location.getLocation();
+          LocationData _locationData = await location.getLocation();
           String _addressName = await mapsUtil.getAddressName(
-              new LatLng(abc.latitude, abc.longitude),
-              setting['google_maps_key']);
+              new LatLng(_locationData?.latitude, _locationData?.longitude),
+              setting.value.googleMapsKey);
           cur_location = _addressName;
-          latitude = abc.latitude;
-          longitude = abc.longitude;
+          latitude = _locationData?.latitude;
+          longitude = _locationData?.longitude;
+          whenDone.complete();
         } catch (e) {
           cur_location = null;
+          whenDone.complete();
         }
-        whenDone.complete();
       } else {
+        Widget cancelButton = FlatButton(
+          child: Text("Don't Allow"),
+          onPressed: () {
+            Navigator.of(navigatorKey.currentContext).pop();
+            cur_location = null;
+            whenDone.complete();
+          },
+        );
         Widget allowButton = FlatButton(
           child: Text("Allow"),
           onPressed: () {
-            Navigator.of(navigatorKey.currentContext).pop();
             AppSettings.openLocationSettings();
-            exit(0);
           },
         );
         AlertDialog alert = AlertDialog(
           title: Text("We would like to access your location"),
           content: Text(
-              "We will capture your location and list nearby Stores\nPlease open Settings and enable location service"),
+              "We will capture your location and list restaurants nearby you\n Please open Settings and enable location service"),
           actions: [
+            cancelButton,
             allowButton,
           ],
         );

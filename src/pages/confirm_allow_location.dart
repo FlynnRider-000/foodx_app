@@ -14,7 +14,7 @@ class ConfirmAllowLocationWidget extends StatefulWidget {
   _ConfirmAllowLocationState createState() => _ConfirmAllowLocationState();
 }
 
-class _ConfirmAllowLocationState extends StateMVC<ConfirmAllowLocationWidget> {
+class _ConfirmAllowLocationState extends StateMVC<ConfirmAllowLocationWidget> with WidgetsBindingObserver {
 
   ConfirmAllowLocationController _con;
 
@@ -22,6 +22,11 @@ class _ConfirmAllowLocationState extends StateMVC<ConfirmAllowLocationWidget> {
     _con = controller;
   }
 
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await _con.onAgree(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,6 @@ class _ConfirmAllowLocationState extends StateMVC<ConfirmAllowLocationWidget> {
             onPressed: () async {
               //Put your code here which you want to execute on Yes button click.
               await _con.onAgree(context);
-              Navigator.of(context).pushReplacementNamed('/Pages', arguments: 2);
             },
           ),
 
