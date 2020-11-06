@@ -60,6 +60,27 @@ Future<dynamic> setCurrentLocation() async {
   MapsUtil mapsUtil = new MapsUtil();
   final whenDone = new Completer();
   Address _address = new Address();
+  location.requestService().then((value) async {
+    location.getLocation().then((_locationData) async {
+      String _addressName = await mapsUtil.getAddressName(new LatLng(_locationData?.latitude, _locationData?.longitude), setting.value.googleMapsKey);
+      _address = Address.fromJSON({'address': _addressName, 'latitude': _locationData?.latitude, 'longitude': _locationData?.longitude});
+      if(userRepo.currentUser.value.apiToken != null) {
+        _address = await userRepo.addAddress(_address);
+      }
+      await changeCurrentLocation(_address);
+      whenDone.complete(_address);
+    }).catchError((e) {
+      whenDone.complete(_address);
+    });
+  });
+  return whenDone.future;
+}
+
+Future<dynamic> setCurrentLocationOnOpenApp() async {
+  var location = new Location();
+  MapsUtil mapsUtil = new MapsUtil();
+  final whenDone = new Completer();
+  Address _address = new Address();
   if (Platform.isAndroid) {
     location.requestService().then((value) async {
       try {
@@ -113,9 +134,7 @@ Future<dynamic> setCurrentLocation() async {
       Widget allowButton = FlatButton(
         child: Text("Allow"),
         onPressed: () {
-          Navigator.of(navigatorKey.currentContext).pop();
           AppSettings.openLocationSettings();
-          exit(0);
         },
       );
       AlertDialog alert = AlertDialog(
@@ -139,10 +158,10 @@ Future<dynamic> setCurrentLocation() async {
 }
 
 Future<Address> changeCurrentLocation(Address _address) async {
-  if (!_address.isUnknown()) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('delivery_address', json.encode(_address.toMap()));
-  }
+  // if (!_address.isUnknown()) {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('delivery_address', json.encode(_address.toMap()));
+  // }
   return _address;
 }
 
@@ -160,7 +179,7 @@ Future<Address> getCurrentLocation() async {
 
 Future<Address> getCurrentLocationOnOpenApp() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await setCurrentLocation();
+  await setCurrentLocationOnOpenApp();
   prefs = await SharedPreferences.getInstance();
   if (prefs.containsKey('delivery_address')) {
     deliveryAddress.value = Address.fromJSON(json.decode(prefs.getString('delivery_address')));
