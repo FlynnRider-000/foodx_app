@@ -128,6 +128,7 @@ Future<dynamic> setCurrentLocationOnOpenApp() async {
         child: Text("Don't Allow"),
         onPressed: () {
           Navigator.of(navigatorKey.currentContext).pop();
+          changeCurrentLocation(_address);
           whenDone.complete(_address);
         },
       );
