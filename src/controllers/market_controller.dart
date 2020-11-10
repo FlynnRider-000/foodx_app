@@ -84,14 +84,14 @@ class MarketController extends ControllerMVC {
     }, onError: (a) {}, onDone: () {});
   }
 
-  void listenForProducts(String idMarket, {List<String> categoriesId}) async {
-    final Stream<Product> stream = await getProductsOfMarket(idMarket, categories: categoriesId);
+  void listenForProducts(String idMarket, {List<String> categoriesId}) async{
+    final Stream<Product> stream = await getProductsOfMarketSuper(idMarket, categories: categoriesId);
     stream.listen((Product _product) {
       setState(() => products.add(_product));
     }, onError: (a) {
       print(a);
     }, onDone: () {
-      market..name = products?.elementAt(0)?.market?.name;
+      market.name = products?.elementAt(0)?.market?.name;
     });
   }
 

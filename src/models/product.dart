@@ -29,6 +29,55 @@ class Product {
 
   Product();
 
+  Product.fromJSONSuper(Map<String, dynamic> jsonMap, mrk, catgry) {
+    try {
+      id = jsonMap['id'].toString();
+      name = jsonMap['name'];
+      price = jsonMap['price'] != null ? jsonMap['price'].toDouble() : 0.0;
+      discountPrice = jsonMap['discount_price'] != null ? jsonMap['discount_price'].toDouble() : 0.0;
+      price = discountPrice != 0 ? discountPrice : price;
+      discountPrice = discountPrice == 0 ? discountPrice : jsonMap['price'] != null ? jsonMap['price'].toDouble() : 0.0;
+      description = jsonMap['description'];
+      capacity = jsonMap['capacity'].toString();
+      unit = jsonMap['unit'] != null ? jsonMap['unit'].toString() : '';
+      packageItemsCount = jsonMap['package_items_count'].toString();
+      featured = jsonMap['featured'] ?? false;
+      outOfStock = jsonMap['out_of_stock'] ?? false;
+      deliverable = jsonMap['deliverable'] ?? false;
+      market = mrk;
+      category = catgry;
+      image = jsonMap['media'] != null && (jsonMap['media'] as List).length > 0 ? Media.fromJSON(jsonMap['media'][0]) : new Media();
+      options = jsonMap['options'] != null && (jsonMap['options'] as List).length > 0
+          ? List.from(jsonMap['options']).map((element) => Option.fromJSON(element)).toSet().toList()
+          : [];
+      optionGroups = jsonMap['option_groups'] != null && (jsonMap['option_groups'] as List).length > 0
+          ? List.from(jsonMap['option_groups']).map((element) => OptionGroup.fromJSON(element)).toSet().toList()
+          : [];
+      productReviews = jsonMap['product_reviews'] != null && (jsonMap['product_reviews'] as List).length > 0
+          ? List.from(jsonMap['product_reviews']).map((element) => Review.fromJSON(element)).toSet().toList()
+          : [];
+    } catch (e) {
+      id = '';
+      name = '';
+      price = 0.0;
+      discountPrice = 0.0;
+      description = '';
+      capacity = '';
+      unit = '';
+      packageItemsCount = '';
+      featured = false;
+      deliverable = false;
+      outOfStock = false;
+      market = Market.fromJSON({});
+      category = Category.fromJSON({});
+      image = new Media();
+      options = [];
+      optionGroups = [];
+      productReviews = [];
+      print(e);
+    }
+  }
+
   Product.fromJSON(Map<String, dynamic> jsonMap) {
     try {
       id = jsonMap['id'].toString();

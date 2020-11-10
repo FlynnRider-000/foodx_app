@@ -10,6 +10,8 @@ import '../helpers/helper.dart';
 import '../models/address.dart';
 import '../models/favorite.dart';
 import '../models/filter.dart';
+import '../models/market.dart';
+import '../models/category.dart';
 import '../models/product.dart';
 import '../models/review.dart';
 import '../models/user.dart';
@@ -213,6 +215,39 @@ Future<Stream<Product>> getProductsOfMarket(String marketId, {List<String> categ
     final streamedRest = await client.send(http.Request('get', uri));
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
       return Product.fromJSON(data);
+    });
+  } catch (e) {
+    print(CustomTrace(StackTrace.current, message: uri.toString()).toString());
+    return new Stream.value(new Product.fromJSON({}));
+  }
+}
+
+Future<Stream<Product>> getProductsOfMarketSuper(String marketId, {List<String> categories}) async {
+  Uri uri = Helper.getUri('api/products/categories_super');
+  Map<String, dynamic> query = {
+    'with': 'market;category;options;productReviews',
+    'search': 'market_id:$marketId',
+    'searchFields': 'market_id:=',
+  };
+
+  if (categories != null && categories.isNotEmpty) {
+    query['categories[]'] = categories;
+  }
+  uri = uri.replace(queryParameters: query);
+  print(uri.toString());
+  try {
+    final client = new http.Client();
+    final streamedRest = await client.send(http.Request('get', uri));
+    Market mrk = Market.fromJSON({});
+    Category ctg = Category.fromJSON({});
+    return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) {
+      if(mrk.name != '') {
+        mrk = Market.fromJSON(Helper.getMarket(data));
+        ctg = Category.fromJSON(Helper.getCategory(data));
+      }
+      return Helper.getProducts(data);
+    }).expand((data) => (data as List)).map((data) {
+      return Product.fromJSONSuper(data, mrk, ctg);
     });
   } catch (e) {
     print(CustomTrace(StackTrace.current, message: uri.toString()).toString());

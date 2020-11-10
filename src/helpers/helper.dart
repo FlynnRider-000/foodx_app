@@ -31,6 +31,18 @@ class Helper {
     this.context = _context;
   }
 
+  static getMarket(Map<String, dynamic> data) {
+    return data['data']['market'] ?? [];
+  }
+
+  static getCategory(Map<String, dynamic> data) {
+    return data['data']['category'] ?? [];
+  }
+
+  static getProducts(Map<String, dynamic> data) {
+    return data['data']['products'] ?? [];
+  }
+
   // for mapping data retrieved form json array
   static getData(Map<String, dynamic> data) {
     return data['data'] ?? [];

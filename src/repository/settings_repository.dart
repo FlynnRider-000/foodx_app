@@ -83,27 +83,21 @@ Future<dynamic> setCurrentLocationOnOpenApp() async {
   Address _address = new Address();
   if (Platform.isAndroid) {
     location.requestService().then((value) async {
-      try {
-        LocationData _locationData = await location.getLocation();
-        String _addressName = await mapsUtil.getAddressName(
-            new LatLng(_locationData?.latitude, _locationData?.longitude),
-            setting.value.googleMapsKey);
-        _address = Address.fromJSON({
-          'address': _addressName,
-          'latitude': _locationData?.latitude,
-          'longitude': _locationData?.longitude
-        });
-        if (userRepo.currentUser.value.apiToken != null) {
+      location.getLocation().then((_locationData) async {
+        String _addressName = await mapsUtil.getAddressName(new LatLng(_locationData?.latitude, _locationData?.longitude), setting.value.googleMapsKey);
+        _address = Address.fromJSON({'address': _addressName, 'latitude': _locationData?.latitude, 'longitude': _locationData?.longitude});
+        if(userRepo.currentUser.value.apiToken != null) {
           _address = await userRepo.addAddress(_address);
         }
         await changeCurrentLocation(_address);
         whenDone.complete(_address);
-      } catch (e) {
+      }).catchError((e) {
         whenDone.complete(_address);
-      }
+      });
     });
   } else if (Platform.isIOS) {
     bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
+    location.requestPermission();
     if (isEnabled) {
       try {
         LocationData _locationData = await location.getLocation();
