@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'dart:io' show Platform;
 
 import '../repository/settings_repository.dart' as settingsRepo;
 import '../controllers/splash_screen_controller.dart';
@@ -41,12 +42,14 @@ class SplashScreenState extends StateMVC<SplashScreen> with WidgetsBindingObserv
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      Navigator.of(context).pop();
-      await settingsRepo.getCurrentLocationOnOpenApp();
-      try {
-        Navigator.of(context).pushReplacementNamed('/Pages', arguments: 2);
-      } catch (e) {}
+    if (Platform.isIOS) {
+      if (state == AppLifecycleState.resumed) {
+        Navigator.of(context).pop();
+        await settingsRepo.getCurrentLocationOnOpenApp();
+        try {
+          Navigator.of(context).pushReplacementNamed('/Pages', arguments: 2);
+        } catch (e) {}
+      }
     }
   }
 

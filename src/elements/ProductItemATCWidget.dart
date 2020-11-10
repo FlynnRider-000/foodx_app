@@ -196,11 +196,14 @@ class _ProductItemWidgetState extends StateMVC<ProductItemWidget> {
                         shape: StadiumBorder(),
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            widget.product.outOfStock == false ? S.of(context).add_to_cart : 'Out of Stock',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(color: Theme.of(context).primaryColor),
-                          ),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: 128),
+                            child: Text(
+                              widget.product.outOfStock == false ? S.of(context).add_to_cart : 'Out of Stock',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(color: Theme.of(context).primaryColor),
+                            ),
+                          )
                         ),
                       )
                     ],

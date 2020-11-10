@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'dart:io' show Platform;
 
 import '../controllers/confirm_allow_location_controller.dart';
-
 import '../../generated/l10n.dart';
-
 
 class ConfirmAllowLocationWidget extends StatefulWidget {
 
@@ -23,8 +22,10 @@ class _ConfirmAllowLocationState extends StateMVC<ConfirmAllowLocationWidget> wi
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      await _con.onAgree(context);
+    if (Platform.isIOS) {
+      if (state == AppLifecycleState.resumed) {
+        await _con.onAgree(context);
+      }
     }
   }
 
