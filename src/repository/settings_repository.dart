@@ -26,6 +26,8 @@ Coupon coupon = new Coupon.fromJSON({});
 final navigatorKey = GlobalKey<NavigatorState>();
 //LocationData locationData;
 
+bool settingOpened = false;
+
 Future<Setting> initSettings() async {
   Setting _setting;
   final String url = '${GlobalConfiguration().getString('api_base_url')}settings';
@@ -129,6 +131,7 @@ Future<dynamic> setCurrentLocationOnOpenApp() async {
       Widget allowButton = FlatButton(
         child: Text("Allow"),
         onPressed: () {
+          settingOpened = true;
           AppSettings.openLocationSettings();
         },
       );
