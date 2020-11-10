@@ -42,9 +42,12 @@ class SplashScreenState extends StateMVC<SplashScreen> with WidgetsBindingObserv
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) async {
+    print("1");
     if (Platform.isIOS && settingsRepo.settingOpened) {
-      settingsRepo.settingOpened = false;
+      print("2");
       if (state == AppLifecycleState.resumed) {
+        print("3");
+        settingsRepo.settingOpened = false;
         Navigator.of(context).pop();
         await settingsRepo.getCurrentLocationOnOpenApp();
         try {
