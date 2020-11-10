@@ -14,6 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends StateMVC<SplashScreen> with WidgetsBindingObserver {
   SplashScreenController _con;
+  bool settingOpened = false;
 
   SplashScreenState() : super(SplashScreenController()) {
     _con = controller;
@@ -33,6 +34,7 @@ class SplashScreenState extends StateMVC<SplashScreen> with WidgetsBindingObserv
         progress += _progress;
       });
       if (progress == 100) {
+        settingOpened = true;
         await settingsRepo.getCurrentLocationOnOpenApp();
         try {
           Navigator.of(context).pushReplacementNamed('/Pages', arguments: 2);
@@ -42,7 +44,8 @@ class SplashScreenState extends StateMVC<SplashScreen> with WidgetsBindingObserv
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS && settingOpened) {
+      settingOpened = false;
       if (state == AppLifecycleState.resumed) {
         Navigator.of(context).pop();
         await settingsRepo.getCurrentLocationOnOpenApp();

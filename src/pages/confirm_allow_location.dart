@@ -22,7 +22,8 @@ class _ConfirmAllowLocationState extends StateMVC<ConfirmAllowLocationWidget> wi
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS && _con.settingOpened) {
+      _con.settingOpened = false;
       if (state == AppLifecycleState.resumed) {
         await _con.onAgree(context);
       }

@@ -97,7 +97,7 @@ Future<dynamic> setCurrentLocationOnOpenApp() async {
     });
   } else if (Platform.isIOS) {
     bool isEnabled = await location.hasPermission() == PermissionStatus.granted;
-    location.requestPermission();
+    await location.requestPermission();
     if (isEnabled) {
       try {
         LocationData _locationData = await location.getLocation();

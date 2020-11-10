@@ -21,6 +21,7 @@ class ConfirmAllowLocationController extends ControllerMVC {
 
   GlobalKey<ScaffoldState> scaffoldKey;
 
+  bool settingOpened = false;
   String cur_location = "";
   double latitude = 0.0;
   double longitude = 0.0;
@@ -104,6 +105,7 @@ class ConfirmAllowLocationController extends ControllerMVC {
         Widget allowButton = FlatButton(
           child: Text("Allow"),
           onPressed: () {
+            this.settingOpened = true;
             AppSettings.openLocationSettings();
           },
         );
