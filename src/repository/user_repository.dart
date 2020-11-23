@@ -15,7 +15,7 @@ import '../repository/user_repository.dart' as userRepo;
 ValueNotifier<User> currentUser = new ValueNotifier(User());
 
 Future<User> login(User user) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}login';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}login';
   final client = new http.Client();
   final response = await client.post(
     url,
@@ -32,7 +32,7 @@ Future<User> login(User user) async {
 }
 
 Future<User> register(User user) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}registerUser';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}registerUser';
   final client = new http.Client();
   final response = await client.post(
     url,
@@ -49,7 +49,7 @@ Future<User> register(User user) async {
 }
 
 Future<bool> resetPassword(User user) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}send_reset_link_email';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}send_reset_link_email';
   final client = new http.Client();
   final response = await client.post(
     url,
@@ -108,17 +108,13 @@ Future<CreditCard> getCreditCard() async {
 
 Future<User> update(User user) async {
   final String _apiToken = 'api_token=${currentUser.value.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}users/${currentUser.value.id}?$_apiToken';
-
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}users/${currentUser.value.id}?$_apiToken';
   final client = new http.Client();
   final response = await client.post(
     url,
     headers: {HttpHeaders.contentTypeHeader: 'application/json'},
     body: json.encode(user.toMap()),
   );
-  print("Asdfafdsfdsafdsafds");
-  print(url);
-  print(json.encode(user.toMap()));
   setCurrentUser(response.body);
   currentUser.value = User.fromJSON(json.decode(response.body)['data']);
   return currentUser.value;
@@ -128,7 +124,7 @@ Future<Stream<Address>> getAddresses() async {
   User _user = currentUser.value;
   final String _apiToken = 'api_token=${_user.apiToken}&';
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}delivery_addresses?$_apiToken&search=user_id:${_user.id}&searchFields=user_id:=&orderBy=updated_at&sortedBy=desc';
+      '${GlobalConfiguration().getValue('api_base_url')}delivery_addresses?$_apiToken&search=user_id:${_user.id}&searchFields=user_id:=&orderBy=updated_at&sortedBy=desc';
 
   final client = new http.Client();
   final streamedRest = await client.send(http.Request('get', Uri.parse(url)));
@@ -142,8 +138,7 @@ Future<Address> addAddress(Address address) async {
   User _user = userRepo.currentUser.value;
   final String _apiToken = 'api_token=${_user.apiToken}';
   address.userId = _user.id;
-  final String url = '${GlobalConfiguration().getString('api_base_url')}delivery_addresses?$_apiToken';
-
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}delivery_addresses?$_apiToken';
   final client = new http.Client();
   final response = await client.post(
     url,
@@ -157,8 +152,7 @@ Future<Address> updateAddress(Address address) async {
   User _user = userRepo.currentUser.value;
   final String _apiToken = 'api_token=${_user.apiToken}';
   address.userId = _user.id;
-  final String url = '${GlobalConfiguration().getString('api_base_url')}delivery_addresses/${address.id}?$_apiToken';
-
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}delivery_addresses/${address.id}?$_apiToken';
   final client = new http.Client();
   final response = await client.put(
     url,
@@ -171,8 +165,7 @@ Future<Address> updateAddress(Address address) async {
 Future<Address> removeDeliveryAddress(Address address) async {
   User _user = userRepo.currentUser.value;
   final String _apiToken = 'api_token=${_user.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}delivery_addresses/${address.id}?$_apiToken';
-
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}delivery_addresses/${address.id}?$_apiToken';
   final client = new http.Client();
   final response = await client.delete(
     url,

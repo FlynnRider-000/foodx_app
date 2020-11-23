@@ -12,10 +12,6 @@ import '../elements/ShoppingCartButtonWidget.dart';
 import '../repository/user_repository.dart';
 
 class FavoritesWidget extends StatefulWidget {
-  final GlobalKey<ScaffoldState> parentScaffoldKey;
-
-  FavoritesWidget({Key key, this.parentScaffoldKey}) : super(key: key);
-
   @override
   _FavoritesWidgetState createState() => _FavoritesWidgetState();
 }
@@ -36,7 +32,7 @@ class _FavoritesWidgetState extends StateMVC<FavoritesWidget> {
       appBar: AppBar(
         leading: new IconButton(
           icon: new Icon(Icons.sort, color: Theme.of(context).hintColor),
-          onPressed: () => widget.parentScaffoldKey.currentState.openDrawer(),
+          onPressed: () => Scaffold.of(context).openDrawer(),
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -64,7 +60,7 @@ class _FavoritesWidgetState extends StateMVC<FavoritesWidget> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SearchBarWidget(onClickFilter: (e) {
-                        widget.parentScaffoldKey.currentState.openEndDrawer();
+                        Scaffold.of(context).openEndDrawer();
                       }),
                     ),
                     SizedBox(height: 10),

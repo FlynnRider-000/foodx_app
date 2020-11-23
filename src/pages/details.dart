@@ -1,24 +1,40 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
 import '../controllers/market_controller.dart';
 import '../elements/CircularLoadingWidget.dart';
-import '../elements/GalleryCarouselWidget.dart';
-import '../elements/ProductItemWidget.dart';
-import '../elements/ReviewsListWidget.dart';
-import '../elements/ShoppingCartFloatButtonWidget.dart';
-import '../helpers/helper.dart';
+import '../elements/DrawerWidget.dart';
+import '../elements/PermissionDeniedWidget.dart';
+import '../models/conversation.dart';
+import '../models/market.dart';
 import '../models/route_argument.dart';
-import '../repository/settings_repository.dart';
+import '../repository/user_repository.dart';
+import 'chat.dart';
+import 'map.dart';
+import 'market.dart';
+import 'menu_list.dart';
 
+// ignore: must_be_immutable
 class DetailsWidget extends StatefulWidget {
-  final RouteArgument routeArgument;
+  RouteArgument routeArgument;
+  dynamic currentTab;
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  Widget currentPage;
 
-  DetailsWidget({Key key, this.routeArgument}) : super(key: key);
+  DetailsWidget({
+    Key key,
+    this.currentTab,
+  }) {
+    if (currentTab != null) {
+      if (currentTab is RouteArgument) {
+        routeArgument = currentTab;
+        currentTab = int.parse(currentTab.id);
+      }
+    } else {
+      currentTab = 0;
+    }
+  }
 
   @override
   _DetailsWidgetState createState() {
@@ -33,321 +49,171 @@ class _DetailsWidgetState extends StateMVC<DetailsWidget> {
     _con = controller;
   }
 
-  @override
-  void initState() {
-    _con.listenForMarket(id: widget.routeArgument.id);
-    _con.listenForGalleries(widget.routeArgument.id);
-    _con.listenForFeaturedProducts(widget.routeArgument.id);
-    _con.listenForMarketReviews(id: widget.routeArgument.id);
+  initState() {
+    _selectTab(widget.currentTab);
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(DetailsWidget oldWidget) {
+    _selectTab(oldWidget.currentTab);
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void _selectTab(int tabItem) {
+    setState(() {
+      widget.currentTab = tabItem;
+      switch (tabItem) {
+        case 0:
+          _con.listenForMarket(id: widget.routeArgument.param).then((value) {
+            setState(() {
+              _con.market = value as Market;
+              print(_con.market.toMap());
+              widget.currentPage = MarketWidget(parentScaffoldKey: widget.scaffoldKey, routeArgument: RouteArgument(param: _con.market));
+            });
+          });
+          break;
+        case 1:
+          if (currentUser.value.apiToken == null) {
+            widget.currentPage = PermissionDeniedWidget();
+          } else {
+            Conversation _conversation = new Conversation(
+                _con.market.users.map((e) {
+                  e.image = _con.market.image;
+                  return e;
+                }).toList(),
+                name: _con.market.name);
+            widget.currentPage = ChatWidget(parentScaffoldKey: widget.scaffoldKey, routeArgument: RouteArgument(id: _con.market.id, param: _conversation));
+          }
+          break;
+        case 2:
+          widget.currentPage = MapWidget(parentScaffoldKey: widget.scaffoldKey, routeArgument: RouteArgument(param: _con.market));
+          break;
+        case 3:
+          widget.currentPage = MenuWidget(parentScaffoldKey: widget.scaffoldKey, routeArgument: RouteArgument(param: _con.market));
+          break;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _con.scaffoldKey,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/Menu', arguments: new RouteArgument(id: widget.routeArgument.id));
-          },
-          isExtended: true,
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          icon: Icon(
-            Icons.shopping_basket,
+        key: widget.scaffoldKey,
+        drawer: DrawerWidget(),
+        bottomNavigationBar: Container(
+          height: 66,
+          decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
+            boxShadow: [BoxShadow(color: Theme.of(context).hintColor.withOpacity(0.10), offset: Offset(0, -4), blurRadius: 10)],
           ),
-          label: Text(
-            S.of(context).shopping,
-            style: TextStyle(color: Theme.of(context).primaryColor),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        body: RefreshIndicator(
-          onRefresh: _con.refreshMarket,
-          child: _con.market == null
-              ? CircularLoadingWidget(height: 500)
-              : Stack(
-                  fit: StackFit.expand,
-                  children: <Widget>[
-                    CustomScrollView(
-                      primary: true,
-                      shrinkWrap: false,
-                      slivers: <Widget>[
-                        SliverAppBar(
-                          backgroundColor: Theme.of(context).accentColor.withOpacity(0.9),
-                          expandedHeight: 300,
-                          elevation: 0,
-                          iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-                          flexibleSpace: FlexibleSpaceBar(
-                            collapseMode: CollapseMode.parallax,
-                            background: Hero(
-                              tag: (widget?.routeArgument?.heroTag ?? '') + _con.market.id,
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: _con.market.image.url,
-                                placeholder: (context, url) => Image.asset(
-                                  'assets/img/loading.gif',
-                                  fit: BoxFit.cover,
-                                ),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Wrap(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 10, top: 25),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        _con.market?.name ?? '',
-                                        overflow: TextOverflow.fade,
-                                        softWrap: false,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline3,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 32,
-                                      child: Chip(
-                                        padding: EdgeInsets.all(0),
-                                        label: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(_con.market.rate,
-                                                style: Theme.of(context).textTheme.bodyText1.merge(TextStyle(color: Theme.of(context).primaryColor))),
-                                            Icon(
-                                              Icons.star_border,
-                                              color: Theme.of(context).primaryColor,
-                                              size: 16,
-                                            ),
-                                          ],
-                                        ),
-                                        backgroundColor: Theme.of(context).accentColor.withOpacity(0.9),
-                                        shape: StadiumBorder(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  SizedBox(width: 20),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                                    decoration: BoxDecoration(color: _con.market.closed ? Colors.grey : Colors.green, borderRadius: BorderRadius.circular(24)),
-                                    child: _con.market.closed
-                                        ? Text(
-                                            S.of(context).closed,
-                                            style: Theme.of(context).textTheme.caption.merge(TextStyle(color: Theme.of(context).primaryColor)),
-                                          )
-                                        : Text(
-                                            S.of(context).open,
-                                            style: Theme.of(context).textTheme.caption.merge(TextStyle(color: Theme.of(context).primaryColor)),
-                                          ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                                    decoration: BoxDecoration(
-                                        color: Helper.canDelivery(_con.market) ? Colors.green : Colors.orange, borderRadius: BorderRadius.circular(24)),
-                                    child: Helper.canDelivery(_con.market)
-                                        ? Text(
-                                            S.of(context).delivery,
-                                            style: Theme.of(context).textTheme.caption.merge(TextStyle(color: Theme.of(context).primaryColor)),
-                                          )
-                                        : Text(
-                                            S.of(context).pickup,
-                                            style: Theme.of(context).textTheme.caption.merge(TextStyle(color: Theme.of(context).primaryColor)),
-                                          ),
-                                  ),
-                                  Expanded(child: SizedBox(height: 0)),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                                    decoration: BoxDecoration(
-                                        color: Helper.canDelivery(_con.market) ? Colors.green : Colors.grey, borderRadius: BorderRadius.circular(24)),
-                                    child: Text(
-                                      Helper.getDistance(_con.market.distance, Helper.of(context).trans(setting.value.distanceUnit)),
-                                      style: Theme.of(context).textTheme.caption.merge(TextStyle(color: Theme.of(context).primaryColor)),
-                                    ),
-                                  ),
-                                  SizedBox(width: 20),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                child: Helper.applyHtml(context, _con.market.description),
-                              ),
-                              ImageThumbCarouselWidget(galleriesList: _con.galleries),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: ListTile(
-                                  dense: true,
-                                  contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                  leading: Icon(
-                                    Icons.stars,
-                                    color: Theme.of(context).hintColor,
-                                  ),
-                                  title: Text(
-                                    S.of(context).information,
-                                    style: Theme.of(context).textTheme.headline4,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                child: Helper.applyHtml(context, _con.market.information),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                margin: const EdgeInsets.symmetric(vertical: 5),
-                                color: Theme.of(context).primaryColor,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        _con.market.address ?? '',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.bodyText1,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    SizedBox(
-                                      width: 42,
-                                      height: 42,
-                                      child: FlatButton(
-                                        padding: EdgeInsets.all(0),
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed('/Pages', arguments: new RouteArgument(id: '1', param: _con.market));
-                                        },
-                                        child: Icon(
-                                          Icons.directions,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 24,
-                                        ),
-                                        color: Theme.of(context).accentColor.withOpacity(0.9),
-                                        shape: StadiumBorder(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                margin: const EdgeInsets.symmetric(vertical: 5),
-                                color: Theme.of(context).primaryColor,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        '${_con.market.phone} \n${_con.market.mobile}',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context).textTheme.bodyText1,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    SizedBox(
-                                      width: 42,
-                                      height: 42,
-                                      child: FlatButton(
-                                        padding: EdgeInsets.all(0),
-                                        onPressed: () {
-                                          launch("tel:${_con.market.mobile}");
-                                        },
-                                        child: Icon(
-                                          Icons.call,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 24,
-                                        ),
-                                        color: Theme.of(context).accentColor.withOpacity(0.9),
-                                        shape: StadiumBorder(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              _con.featuredProducts.isEmpty
-                                  ? SizedBox(height: 0)
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                                      child: ListTile(
-                                        dense: true,
-                                        contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                        leading: Icon(
-                                          Icons.shopping_basket,
-                                          color: Theme.of(context).hintColor,
-                                        ),
-                                        title: Text(
-                                          S.of(context).featured_products,
-                                          style: Theme.of(context).textTheme.headline4,
-                                        ),
-                                      ),
-                                    ),
-                              _con.featuredProducts.isEmpty
-                                  ? SizedBox(height: 0)
-                                  : ListView.separated(
-                                      padding: EdgeInsets.symmetric(vertical: 10),
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      primary: false,
-                                      itemCount: _con.featuredProducts.length,
-                                      separatorBuilder: (context, index) {
-                                        return SizedBox(height: 10);
-                                      },
-                                      itemBuilder: (context, index) {
-                                        return ProductItemWidget(
-                                          heroTag: 'details_featured_product',
-                                          product: _con.featuredProducts.elementAt(index),
-                                        );
-                                      },
-                                    ),
-                              SizedBox(height: 100),
-                              _con.reviews.isEmpty
-                                  ? SizedBox(height: 5)
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                      child: ListTile(
-                                        dense: true,
-                                        contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                        leading: Icon(
-                                          Icons.recent_actors,
-                                          color: Theme.of(context).hintColor,
-                                        ),
-                                        title: Text(
-                                          S.of(context).what_they_say,
-                                          style: Theme.of(context).textTheme.headline4,
-                                        ),
-                                      ),
-                                    ),
-                              _con.reviews.isEmpty
-                                  ? SizedBox(height: 5)
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                      child: ReviewsListWidget(reviewsList: _con.reviews),
-                                    ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Positioned(
-                      top: 32,
-                      right: 20,
-                      child: ShoppingCartFloatButtonWidget(
-                        iconColor: Theme.of(context).primaryColor,
-                        labelColor: Theme.of(context).hintColor,
-                        routeArgument: RouteArgument(param: '/Details', id: widget.routeArgument.id),
-                      ),
-                    ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.store,
+                  size: widget.currentTab == 0 ? 28 : 24,
+                  color: widget.currentTab == 0 ? Theme.of(context).accentColor : Theme.of(context).focusColor,
+                ),
+                onPressed: () {
+                  this._selectTab(0);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.chat,
+                  size: widget.currentTab == 1 ? 28 : 24,
+                  color: widget.currentTab == 1 ? Theme.of(context).accentColor : Theme.of(context).focusColor,
+                ),
+                onPressed: () {
+                  this._selectTab(1);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.directions,
+                  size: widget.currentTab == 2 ? 28 : 24,
+                  color: widget.currentTab == 2 ? Theme.of(context).accentColor : Theme.of(context).focusColor,
+                ),
+                onPressed: () {
+                  this._selectTab(2);
+                },
+              ),
+              FlatButton(
+                onPressed: () {
+                  this._selectTab(3);
+                },
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: StadiumBorder(),
+                color: Theme.of(context).accentColor,
+                child: Wrap(
+                  spacing: 10,
+                  children: [
+                    Icon(Icons.shopping_basket, color: Theme.of(context).primaryColor),
+                    Text(
+                      S.of(context).shopping,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )
                   ],
                 ),
-        ));
+              ),
+            ],
+          ),
+        ),
+        /*
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Theme.of(context).accentColor,
+          selectedFontSize: 0,
+          unselectedFontSize: 0,
+          iconSize: 22,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          //selectedIconTheme: IconThemeData(size: 28),
+          unselectedItemColor: Theme.of(context).focusColor.withOpacity(1),
+          currentIndex: widget.currentTab,
+          onTap: (int i) {
+            this._selectTab(i);
+            print(i);
+          },
+          // this will be set when a new tab is tapped
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.store),
+              title: new Container(height: 0.0),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              title: new Container(height: 0.0),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.directions),
+              title: new Container(height: 0.0),
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                margin: EdgeInsetsDirectional.only(end: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Wrap(
+                  spacing: 10,
+                  children: [
+                    Icon(Icons.market, color: Theme.of(context).primaryColor),
+                    Text(
+                      S.of(context).menu,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    )
+                  ],
+                ),
+              ),
+              title: SizedBox(height: 0),
+            ),
+          ],
+        ),*/
+        body: widget.currentPage ?? CircularLoadingWidget(height: 400));
   }
 }

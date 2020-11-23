@@ -126,30 +126,30 @@ class Helper {
         maxLines: 1,
         text: setting.value?.currencyRight != null && setting.value?.currencyRight == false
             ? TextSpan(
-          text: setting.value?.defaultCurrency,
-          style: style == null
-              ? Theme.of(context).textTheme.subtitle1.merge(
-            TextStyle(fontWeight: FontWeight.w400, fontSize: Theme.of(context).textTheme.subtitle1.fontSize - 6),
-          )
-              : style.merge(TextStyle(fontWeight: FontWeight.w400, fontSize: style.fontSize - 6)),
-          children: <TextSpan>[
-            TextSpan(text: myPrice.toStringAsFixed(setting.value?.currencyDecimalDigits) ?? '', style: style ?? Theme.of(context).textTheme.subtitle1),
-          ],
-        )
-            : TextSpan(
-          text: myPrice.toStringAsFixed(setting.value?.currencyDecimalDigits) ?? '',
-          style: style ?? Theme.of(context).textTheme.subtitle1,
-          children: <TextSpan>[
-            TextSpan(
-              text: setting.value?.defaultCurrency,
-              style: style == null
-                  ? Theme.of(context).textTheme.subtitle1.merge(
-                TextStyle(fontWeight: FontWeight.w400, fontSize: Theme.of(context).textTheme.subtitle1.fontSize - 6),
+                text: setting.value?.defaultCurrency,
+                style: style == null
+                    ? Theme.of(context).textTheme.subtitle1.merge(
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: Theme.of(context).textTheme.subtitle1.fontSize - 6),
+                        )
+                    : style.merge(TextStyle(fontWeight: FontWeight.w400, fontSize: style.fontSize - 6)),
+                children: <TextSpan>[
+                  TextSpan(text: myPrice.toStringAsFixed(setting.value?.currencyDecimalDigits) ?? '', style: style ?? Theme.of(context).textTheme.subtitle1),
+                ],
               )
-                  : style.merge(TextStyle(fontWeight: FontWeight.w400, fontSize: style.fontSize - 6)),
-            ),
-          ],
-        ),
+            : TextSpan(
+                text: myPrice.toStringAsFixed(setting.value?.currencyDecimalDigits) ?? '',
+                style: style ?? Theme.of(context).textTheme.subtitle1,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: setting.value?.defaultCurrency,
+                    style: style == null
+                        ? Theme.of(context).textTheme.subtitle1.merge(
+                              TextStyle(fontWeight: FontWeight.w400, fontSize: Theme.of(context).textTheme.subtitle1.fontSize - 6),
+                            )
+                        : style.merge(TextStyle(fontWeight: FontWeight.w400, fontSize: style.fontSize - 6)),
+                  ),
+                ],
+              ),
       );
     } catch (e) {
       return Text('');
@@ -157,7 +157,6 @@ class Helper {
   }
 
   static double getTotalOrderPrice(ProductOrder productOrder) {
-
     double total = productOrder.price;
     productOrder.options.forEach((option) {
       total += option.price != null ? option.price : 0;
@@ -299,14 +298,14 @@ class Helper {
   }
 
   static Uri getUri(String path) {
-    String _path = Uri.parse(GlobalConfiguration().getString('base_url')).path;
+    String _path = Uri.parse(GlobalConfiguration().getValue('base_url')).path;
     if (!_path.endsWith('/')) {
       _path += '/';
     }
     Uri uri = Uri(
-        scheme: Uri.parse(GlobalConfiguration().getString('base_url')).scheme,
-        host: Uri.parse(GlobalConfiguration().getString('base_url')).host,
-        port: Uri.parse(GlobalConfiguration().getString('base_url')).port,
+        scheme: Uri.parse(GlobalConfiguration().getValue('base_url')).scheme,
+        host: Uri.parse(GlobalConfiguration().getValue('base_url')).host,
+        port: Uri.parse(GlobalConfiguration().getValue('base_url')).port,
         path: _path + path);
     return uri;
   }

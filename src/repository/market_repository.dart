@@ -120,6 +120,7 @@ Future<Stream<Market>> getMarket(String id, Address address) async {
     _queryParams['areaLon'] = address.longitude.toString();
     _queryParams['areaLat'] = address.latitude.toString();
   }
+  _queryParams['with'] = 'users';
   uri = uri.replace(queryParameters: _queryParams);
 
   print("\n");
@@ -139,7 +140,7 @@ Future<Stream<Market>> getMarket(String id, Address address) async {
 }
 
 Future<Stream<Review>> getMarketReviews(String id) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}market_reviews?with=user&search=market_id:$id';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}market_reviews?with=user&search=market_id:$id';
 
   print("\n");
   print("--------------MarketRepository/getMarketReviews-----------------");
@@ -160,7 +161,7 @@ Future<Stream<Review>> getMarketReviews(String id) async {
 }
 
 Future<Stream<Review>> getRecentReviews() async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}market_reviews?orderBy=updated_at&sortedBy=desc&limit=3&with=user';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}market_reviews?orderBy=updated_at&sortedBy=desc&limit=3&with=user';
 
   print("\n");
   print("--------------MarketRepository/getRecentReviews-----------------");
@@ -181,7 +182,7 @@ Future<Stream<Review>> getRecentReviews() async {
 }
 
 Future<Review> addMarketReview(Review review, Market market) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}market_reviews';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}market_reviews';
   final client = new http.Client();
   review.user = currentUser.value;
 

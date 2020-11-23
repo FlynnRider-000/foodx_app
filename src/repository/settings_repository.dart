@@ -24,14 +24,12 @@ ValueNotifier<Setting> setting = new ValueNotifier(new Setting());
 ValueNotifier<Address> deliveryAddress = new ValueNotifier(new Address());
 Coupon coupon = new Coupon.fromJSON({});
 final navigatorKey = GlobalKey<NavigatorState>();
-//LocationData locationData;
 
 bool settingOpened = false;
 
 Future<Setting> initSettings() async {
   Setting _setting;
-  final String url = '${GlobalConfiguration().getString('api_base_url')}settings';
-
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}settings';
   try {
     final response = await http.get(url, headers: {HttpHeaders.contentTypeHeader: 'application/json'});
     if (response.statusCode == 200 && response.headers.containsValue('application/json')) {

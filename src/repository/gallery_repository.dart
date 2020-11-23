@@ -11,8 +11,7 @@ import '../repository/user_repository.dart';
 Future<Stream<Gallery>> getGalleries(String idMarket) async {
   User _user = currentUser.value;
   final String _apiToken = 'api_token=${_user.apiToken}&';
-  final String url =
-      '${GlobalConfiguration().getString('api_base_url')}galleries?${_apiToken}search=market_id:$idMarket';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}galleries?${_apiToken}search=market_id:$idMarket';
 
   final client = new http.Client();
   final streamedRest = await client.send(http.Request('get', Uri.parse(url)));

@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -68,6 +70,16 @@ class S {
     return Intl.message(
       'Ordered by Nearby first',
       name: 'ordered_by_nearby_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Double-click on the product to add it to the cart`
+  String get double_click_on_the_product_to_add_it_to_the {
+    return Intl.message(
+      'Double-click on the product to add it to the cart',
+      name: 'double_click_on_the_product_to_add_it_to_the',
       desc: '',
       args: [],
     );
@@ -263,6 +275,16 @@ class S {
     );
   }
 
+  /// `Menu`
+  String get menu {
+    return Intl.message(
+      'Menu',
+      name: 'menu',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Information`
   String get information {
     return Intl.message(
@@ -418,6 +440,16 @@ class S {
     return Intl.message(
       'All Products',
       name: 'all_product',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Long press on the product to add supplements`
+  String get longpress_on_the_product_to_add_suplements {
+    return Intl.message(
+      'Long press on the product to add supplements',
+      name: 'longpress_on_the_product_to_add_suplements',
       desc: '',
       args: [],
     );
@@ -738,6 +770,16 @@ class S {
     return Intl.message(
       'I have account? Back to login',
       name: 'i_have_account_back_to_login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Multi Markets`
+  String get multi_markets {
+    return Intl.message(
+      'Multi Markets',
+      name: 'multi_markets',
       desc: '',
       args: [],
     );
@@ -2363,6 +2405,166 @@ class S {
     );
   }
 
+  /// `Valid Coupon`
+  String get validCouponCode {
+    return Intl.message(
+      'Valid Coupon',
+      name: 'validCouponCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid Coupon`
+  String get invalidCouponCode {
+    return Intl.message(
+      'Invalid Coupon',
+      name: 'invalidCouponCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Have Coupon Code?`
+  String get haveCouponCode {
+    return Intl.message(
+      'Have Coupon Code?',
+      name: 'haveCouponCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Messages`
+  String get messages {
+    return Intl.message(
+      'Messages',
+      name: 'messages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don't have any conversations`
+  String get youDontHaveAnyConversations {
+    return Intl.message(
+      'You don\'t have any conversations',
+      name: 'youDontHaveAnyConversations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New message from`
+  String get newMessageFrom {
+    return Intl.message(
+      'New message from',
+      name: 'newMessageFrom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For more details, please chat with our managers`
+  String get forMoreDetailsPleaseChatWithOurManagers {
+    return Intl.message(
+      'For more details, please chat with our managers',
+      name: 'forMoreDetailsPleaseChatWithOurManagers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign-In to chat with our managers`
+  String get signinToChatWithOurManagers {
+    return Intl.message(
+      'Sign-In to chat with our managers',
+      name: 'signinToChatWithOurManagers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type to start chat`
+  String get typeToStartChat {
+    return Intl.message(
+      'Type to start chat',
+      name: 'typeToStartChat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Make it default`
+  String get makeItDefault {
+    return Intl.message(
+      'Make it default',
+      name: 'makeItDefault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not valid address`
+  String get notValidAddress {
+    return Intl.message(
+      'Not valid address',
+      name: 'notValidAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swipe left the notification to delete or read / unread it`
+  String get swipeLeftTheNotificationToDeleteOrReadUnreadIt {
+    return Intl.message(
+      'Swipe left the notification to delete or read / unread it',
+      name: 'swipeLeftTheNotificationToDeleteOrReadUnreadIt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This notification has marked as unread`
+  String get thisNotificationHasMarkedAsUnread {
+    return Intl.message(
+      'This notification has marked as unread',
+      name: 'thisNotificationHasMarkedAsUnread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notification was removed`
+  String get notificationWasRemoved {
+    return Intl.message(
+      'Notification was removed',
+      name: 'notificationWasRemoved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This notification has marked as read`
+  String get thisNotificationHasMarkedAsRead {
+    return Intl.message(
+      'This notification has marked as read',
+      name: 'thisNotificationHasMarkedAsRead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Free`
+  String get free {
+    return Intl.message(
+      'Free',
+      name: 'free',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Total amount is less than mini order and you will be charged delivery fee\n \nMinimum Order is %i\nDeliver Fee is %.2f`
   String get market_minimum_order {
     return Intl.message(
@@ -2463,37 +2665,7 @@ class S {
     );
   }
 
-  /// `Valid Coupon`
-  String get validCouponCode {
-    return Intl.message(
-      'Valid Coupon',
-      name: 'validCouponCode',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Invalid Coupon`
-  String get invalidCouponCode {
-    return Intl.message(
-      'Invalid Coupon',
-      name: 'invalidCouponCode',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Have Coupon Code?`
-  String get haveCouponCode {
-    return Intl.message(
-      'Have Coupon Code?',
-      name: 'haveCouponCode',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `OTP Verification?`
+  /// `OTP Verification`
   String get otp_verification {
     return Intl.message(
       'OTP Verification',

@@ -23,7 +23,7 @@ Future<Stream<Order>> getOrders() async {
   }
   final String _apiToken = 'api_token=${_user.apiToken}&';
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}orders?${_apiToken}with=user;productOrders;productOrders.product;productOrders.options;orderStatus;payment&search=user.id:${_user.id}&searchFields=user.id:=&orderBy=id&sortedBy=desc';
+      '${GlobalConfiguration().getValue('api_base_url')}orders?${_apiToken}with=user;productOrders;productOrders.product;productOrders.options;orderStatus;payment&search=user.id:${_user.id}&searchFields=user.id:=&orderBy=id&sortedBy=desc';
 
   print("\n");
   print("--------------OrderRepository/getOrders-----------------");
@@ -50,7 +50,7 @@ Future<Stream<Order>> getOrder(orderId) async {
   }
   final String _apiToken = 'api_token=${_user.apiToken}&';
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}orders/$orderId?${_apiToken}with=user;productOrders;productOrders.product;orderStatus;deliveryAddress;payment';
+      '${GlobalConfiguration().getValue('api_base_url')}orders/$orderId?${_apiToken}with=user;productOrders;productOrders.product;productOrders.options;orderStatus;deliveryAddress;payment';
 
   print("\n");
   print("--------------OrderRepository/getOrder-----------------");
@@ -72,7 +72,7 @@ Future<Stream<Order>> getRecentOrders() async {
   }
   final String _apiToken = 'api_token=${_user.apiToken}&';
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}orders?${_apiToken}with=user;productOrders;productOrders.product;orderStatus;payment&search=user.id:${_user.id}&searchFields=user.id:=&orderBy=updated_at&sortedBy=desc&limit=3';
+      '${GlobalConfiguration().getValue('api_base_url')}orders?${_apiToken}with=user;productOrders;productOrders.product;productOrders.options;orderStatus;payment&search=user.id:${_user.id}&searchFields=user.id:=&orderBy=updated_at&sortedBy=desc&limit=3';
 
   print("\n");
   print("--------------OrderRepository/getRecentOrders-----------------");
@@ -93,7 +93,7 @@ Future<Stream<OrderStatus>> getOrderStatus() async {
     return new Stream.value(null);
   }
   final String _apiToken = 'api_token=${_user.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}order_statuses?$_apiToken';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}order_statuses?$_apiToken';
 
   print("\n");
   print("--------------OrderRepository/getOrderStatus-----------------");
@@ -118,7 +118,7 @@ Future<Order> addOrder(Order order, Payment payment, double total) async {
   order.payment = payment;
   order.total = total;
   final String _apiToken = 'api_token=${_user.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}orders?$_apiToken';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}orders?$_apiToken';
   final client = new http.Client();
   Map params = order.toMap();
   params.addAll(_creditCard.toMap());
@@ -153,7 +153,7 @@ Future<Order> addOrder(Order order, Payment payment, double total) async {
 Future<Order> cancelOrder(Order order) async {
   User _user = userRepo.currentUser.value;
   final String _apiToken = 'api_token=${_user.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}orders/${order.id}?$_apiToken';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}orders/${order.id}?$_apiToken';
 
   print("\n");
   print("--------------OrderRepository/cancelOrder-----------------");

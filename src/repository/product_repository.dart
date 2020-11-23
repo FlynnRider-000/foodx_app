@@ -99,11 +99,10 @@ Future<Stream<Product>> getProductsByCategory(categoryId) async {
 
   _queryParams = filter.toQuery(oldQuery: _queryParams);
   uri = uri.replace(queryParameters: _queryParams);
-  print('getProductsByCategory');
-  print(uri.toString());
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', uri));
+
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
       return Product.fromJSON(data);
     });
@@ -119,7 +118,7 @@ Future<Stream<Favorite>> isFavoriteProduct(String productId) async {
     return Stream.value(null);
   }
   final String _apiToken = 'api_token=${_user.apiToken}&';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}favorites/exist?${_apiToken}product_id=$productId&user_id=${_user.id}';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}favorites/exist?${_apiToken}product_id=$productId&user_id=${_user.id}';
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', Uri.parse(url)));
@@ -138,7 +137,7 @@ Future<Stream<Favorite>> getFavorites() async {
   }
   final String _apiToken = 'api_token=${_user.apiToken}&';
   final String url =
-      '${GlobalConfiguration().getString('api_base_url')}favorites?${_apiToken}with=product;user;options&search=user_id:${_user.id}&searchFields=user_id:=';
+      '${GlobalConfiguration().getValue('api_base_url')}favorites?${_apiToken}with=product;user;options&search=user_id:${_user.id}&searchFields=user_id:=';
 
   final client = new http.Client();
   final streamedRest = await client.send(http.Request('get', Uri.parse(url)));
@@ -162,7 +161,7 @@ Future<Favorite> addFavorite(Favorite favorite) async {
   }
   final String _apiToken = 'api_token=${_user.apiToken}';
   favorite.userId = _user.id;
-  final String url = '${GlobalConfiguration().getString('api_base_url')}favorites?$_apiToken';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}favorites?$_apiToken';
   try {
     final client = new http.Client();
     final response = await client.post(
@@ -183,7 +182,7 @@ Future<Favorite> removeFavorite(Favorite favorite) async {
     return new Favorite();
   }
   final String _apiToken = 'api_token=${_user.apiToken}';
-  final String url = '${GlobalConfiguration().getString('api_base_url')}favorites/${favorite.id}?$_apiToken';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}favorites/${favorite.id}?$_apiToken';
   try {
     final client = new http.Client();
     final response = await client.delete(
@@ -209,10 +208,10 @@ Future<Stream<Product>> getProductsOfMarket(String marketId, {List<String> categ
     query['categories[]'] = categories;
   }
   uri = uri.replace(queryParameters: query);
-  print(uri.toString());
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', uri));
+
     return streamedRest.stream.transform(utf8.decoder).transform(json.decoder).map((data) => Helper.getData(data)).expand((data) => (data as List)).map((data) {
       return Product.fromJSON(data);
     });
@@ -299,7 +298,7 @@ Future<Stream<Product>> getFeaturedProductsOfMarket(String marketId) async {
 }
 
 Future<Review> addProductReview(Review review, Product product) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}product_reviews';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}product_reviews';
   final client = new http.Client();
   review.user = userRepo.currentUser.value;
   try {

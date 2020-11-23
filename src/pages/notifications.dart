@@ -51,44 +51,56 @@ class _NotificationsWidgetState extends StateMVC<NotificationsWidget> {
               onRefresh: _con.refreshNotifications,
               child: _con.notifications.isEmpty
                   ? EmptyNotificationsWidget()
-                  : SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 10),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(vertical: 0),
-                              leading: Icon(
-                                Icons.notifications,
-                                color: Theme.of(context).hintColor,
-                              ),
-                              title: Text(
-                                S.of(context).notifications,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.headline4,
-                              ),
+                  : ListView(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 10),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(vertical: 0),
+                            leading: Icon(
+                              Icons.notifications,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            title: Text(
+                              S.of(context).notifications,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                            subtitle: Text(
+                              S.of(context).swipeLeftTheNotificationToDeleteOrReadUnreadIt,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.caption,
                             ),
                           ),
-                          ListView.separated(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: _con.notifications.length,
-                            separatorBuilder: (context, index) {
-                              return SizedBox(height: 15);
-                            },
-                            itemBuilder: (context, index) {
-                              return NotificationItemWidget(notification: _con.notifications.elementAt(index));
-                            },
-                          ),
-                        ],
-                      ),
+                        ),
+                        ListView.separated(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          primary: false,
+                          itemCount: _con.notifications.length,
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 15);
+                          },
+                          itemBuilder: (context, index) {
+                            return NotificationItemWidget(
+                              notification: _con.notifications.elementAt(index),
+                              onMarkAsRead: () {
+                                _con.doMarkAsReadNotifications(_con.notifications.elementAt(index));
+                              },
+                              onMarkAsUnRead: () {
+                                _con.doMarkAsUnReadNotifications(_con.notifications.elementAt(index));
+                              },
+                              onRemoved: () {
+                                _con.doRemoveNotification(_con.notifications.elementAt(index));
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
             ),
     );

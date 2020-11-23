@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'src/models/route_argument.dart';
 import 'src/pages/cart.dart';
 import 'src/pages/category.dart';
+import 'src/pages/chat.dart';
 import 'src/pages/checkout.dart';
 import 'src/pages/debug.dart';
 import 'src/pages/delivery_addresses.dart';
 import 'src/pages/delivery_pickup.dart';
 import 'src/pages/details.dart';
+import 'src/pages/favorites.dart';
 import 'src/pages/forget_password.dart';
 import 'src/pages/help.dart';
 import 'src/pages/languages.dart';
@@ -55,8 +57,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ForgetPasswordWidget());
       case '/Pages':
         return MaterialPageRoute(builder: (_) => PagesWidget(currentTab: args));
+      case '/Favorites':
+        return MaterialPageRoute(builder: (_) => FavoritesWidget());
+      case '/Chat':
+        return MaterialPageRoute(builder: (_) => ChatWidget(routeArgument: args as RouteArgument));
       case '/Details':
-        return MaterialPageRoute(builder: (_) => DetailsWidget(routeArgument: args));
+        return MaterialPageRoute(builder: (_) => DetailsWidget(currentTab: args));
       case '/Menu':
         return MaterialPageRoute(builder: (_) => MenuWidget(routeArgument: args as RouteArgument));
       case '/Product':

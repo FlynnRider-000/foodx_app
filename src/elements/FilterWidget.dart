@@ -94,24 +94,24 @@ class _FilterWidgetState extends StateMVC<FilterWidget> {
                   _con.fields.isEmpty
                       ? CircularLoadingWidget(height: 100)
                       : ExpansionTile(
-                    title: Text(S.of(context).fields),
-                    children: List.generate(_con.fields.length, (index) {
-                      return CheckboxListTile(
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        value: _con.fields.elementAt(index).selected,
-                        onChanged: (value) {
-                          _con.onChangeFieldsFilter(index);
-                        },
-                        title: Text(
-                          _con.fields.elementAt(index).name,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          maxLines: 1,
+                          title: Text(S.of(context).fields),
+                          children: List.generate(_con.fields.length, (index) {
+                            return CheckboxListTile(
+                              controlAffinity: ListTileControlAffinity.trailing,
+                              value: _con.fields.elementAt(index).selected,
+                              onChanged: (value) {
+                                _con.onChangeFieldsFilter(index);
+                              },
+                              title: Text(
+                                _con.fields.elementAt(index).name,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                maxLines: 1,
+                              ),
+                            );
+                          }),
+                          initiallyExpanded: true,
                         ),
-                      );
-                    }),
-                    initiallyExpanded: true,
-                  ),
                 ],
               ),
             ),

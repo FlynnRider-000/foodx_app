@@ -13,6 +13,7 @@ class DrawerWidget extends StatefulWidget {
 
 class _DrawerWidgetState extends StateMVC<DrawerWidget> {
   _DrawerWidgetState() : super(ProfileController()) {}
+
   @override
   void dispose() {
     super.dispose();
@@ -132,6 +133,19 @@ class _DrawerWidgetState extends StateMVC<DrawerWidget> {
             ),
             title: Text(
               S.of(context).favorite_products,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).pushNamed('/Pages', arguments: 4);
+            },
+            leading: Icon(
+              Icons.chat,
+              color: Theme.of(context).focusColor.withOpacity(1),
+            ),
+            title: Text(
+              S.of(context).messages,
               style: Theme.of(context).textTheme.subtitle1,
             ),
           ),

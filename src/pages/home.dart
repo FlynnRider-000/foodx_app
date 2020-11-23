@@ -82,7 +82,7 @@ class _HomeWidgetState extends StateMVC<HomeWidget> {
                   return Padding(
                     padding: const EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 10),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

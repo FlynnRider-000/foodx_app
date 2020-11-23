@@ -1,5 +1,6 @@
 
 import '../models/media.dart';
+import 'user.dart';
 
 class Market {
   String id;
@@ -25,6 +26,7 @@ class Market {
   int mini_order;
   double deliveryRange;
   double distance;
+  List<User> users;
   List<String> categories;
   Market();
 
@@ -33,9 +35,7 @@ class Market {
 
       id = jsonMap['id'].toString();
       name = jsonMap['name'];
-      image = jsonMap['media'] != null && (jsonMap['media'] as List).length > 0
-          ? Media.fromJSON(jsonMap['media'][0])
-          : new Media();
+      image = jsonMap['media'] != null && (jsonMap['media'] as List).length > 0 ? Media.fromJSON(jsonMap['media'][0]) : new Media();
       rate = jsonMap['rate'] ?? '0';
       deliveryFee = jsonMap['delivery_fee'] != null ? jsonMap['delivery_fee'].toDouble() : 0.0;
       adminCommission = jsonMap['admin_commission'] != null ? jsonMap['admin_commission'].toDouble() : 0.0;
@@ -57,6 +57,9 @@ class Market {
       availableForDelivery = jsonMap['available_for_delivery'] ?? false;
       distance = jsonMap['distance'] != null ? double.parse(jsonMap['distance'].toString()) : 0.0;
       categories = (jsonMap['category_lists'] != "" && jsonMap['category_lists'] != null) ? jsonMap['category_lists'].split(",").toList() : new List();
+      users = jsonMap['users'] != null && (jsonMap['users'] as List).length > 0
+          ? List.from(jsonMap['users']).map((element) => User.fromJSON(element)).toSet().toList()
+          : [];
     } catch (e) {
       id = '';
       name = '';
@@ -82,6 +85,7 @@ class Market {
       availableForDelivery = false;
       distance = 0.0;
       categories = new List();
+      users = [];
       print(e);
     }
   }

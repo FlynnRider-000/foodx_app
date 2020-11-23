@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -29,22 +31,27 @@ class MarketController extends ControllerMVC {
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
   }
 
-  void listenForMarket({String id, String message}) async {
+  Future<dynamic> listenForMarket({String id, String message}) async {
+    final whenDone = new Completer();
     final Stream<Market> stream = await getMarket(id, deliveryAddress.value);
     stream.listen((Market _market) {
       setState(() => market = _market);
+      return whenDone.complete(_market);
     }, onError: (a) {
       print(a);
       scaffoldKey?.currentState?.showSnackBar(SnackBar(
         content: Text(S.of(context).verify_your_internet_connection),
       ));
+      return whenDone.complete(Market.fromJSON({}));
     }, onDone: () {
       if (message != null) {
         scaffoldKey?.currentState?.showSnackBar(SnackBar(
           content: Text(message),
         ));
+        return whenDone.complete(market);
       }
     });
+    return whenDone.future;
   }
 
   void listenForGalleries(String idMarket) async {

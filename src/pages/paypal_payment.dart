@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -38,7 +38,7 @@ class _PayPalPaymentWidgetState extends StateMVC<PayPalPaymentWidget> {
           InAppWebView(
             initialUrl: _con.url,
             initialHeaders: {},
-            initialOptions: new InAppWebViewWidgetOptions(),
+            initialOptions: new InAppWebViewGroupOptions(),
             onWebViewCreated: (InAppWebViewController controller) {
               _con.webView = controller;
             },

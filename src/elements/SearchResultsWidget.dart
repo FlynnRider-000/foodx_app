@@ -128,7 +128,8 @@ class _SearchResultWidgetState extends StateMVC<SearchResultWidget> {
                             onTap: () {
                               Navigator.of(context).pushNamed('/Details',
                                   arguments: RouteArgument(
-                                    id: _con.markets.elementAt(index).id,
+                                    id: '0',
+                                    param: _con.markets.elementAt(index).id,
                                     heroTag: widget.heroTag,
                                   ));
                             },

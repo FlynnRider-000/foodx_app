@@ -36,7 +36,8 @@ class _CardsCarouselWidgetState extends State<CardsCarouselWidget> {
                   onTap: () {
                     Navigator.of(context).pushNamed('/Details',
                         arguments: RouteArgument(
-                          id: widget.marketsList.elementAt(index).id,
+                          id: '0',
+                          param: widget.marketsList.elementAt(index).id,
                           heroTag: widget.heroTag,
                         ));
                   },

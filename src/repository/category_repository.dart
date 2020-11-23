@@ -57,7 +57,7 @@ Future<Stream<Category>> getCategoriesOfMarket(String marketId) async {
 }
 
 Future<Stream<Category>> getCategory(String id) async {
-  final String url = '${GlobalConfiguration().getString('api_base_url')}categories/$id';
+  final String url = '${GlobalConfiguration().getValue('api_base_url')}categories/$id';
   try {
     final client = new http.Client();
     final streamedRest = await client.send(http.Request('get', Uri.parse(url)));

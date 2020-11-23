@@ -54,7 +54,7 @@ class DeliveryAddressDialog {
                         keyboardType: TextInputType.text,
                         decoration: getInputDecoration(hintText: S.of(context).hint_full_address, labelText: S.of(context).full_address),
                         initialValue: address.address?.isNotEmpty ?? false ? address.address : null,
-                        validator: (input) => input.trim().length == 0 ? 'Not valid address' : null,
+                        validator: (input) => input.trim().length == 0 ? S.of(context).notValidAddress : null,
                         onSaved: (input) => address.address = input,
                       ),
                     ),
@@ -64,7 +64,7 @@ class DeliveryAddressDialog {
                         context: context,
                         initialValue: address.isDefault ?? false,
                         onSaved: (input) => address.isDefault = input,
-                        title: Text('Make it default'),
+                        title: Text(S.of(context).makeItDefault),
                       ),
                     )
                   ],

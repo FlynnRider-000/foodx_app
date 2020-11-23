@@ -1,6 +1,8 @@
 
 import '../models/media.dart';
 
+enum UserState { available, away, busy }
+
 class User {
   String id;
   String name;
@@ -72,6 +74,16 @@ class User {
     map["cur_location"] = cur_location;
     map["bio"] = bio;
     map["media"] = image?.toMap();
+    return map;
+  }
+
+  Map toRestrictMap() {
+    var map = new Map<String, dynamic>();
+    map["id"] = id;
+    map["email"] = email;
+    map["name"] = name;
+    map["thumb"] = image?.thumb;
+    map["device_token"] = deviceToken;
     return map;
   }
 

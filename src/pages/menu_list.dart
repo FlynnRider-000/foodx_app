@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../generated/l10n.dart';
 import '../controllers/market_controller.dart';
@@ -18,8 +18,9 @@ class MenuWidget extends StatefulWidget {
   @override
   _MenuWidgetState createState() => _MenuWidgetState();
   final RouteArgument routeArgument;
+  final GlobalKey<ScaffoldState> parentScaffoldKey;
 
-  MenuWidget({Key key, this.routeArgument}) : super(key: key);
+  MenuWidget({Key key, this.parentScaffoldKey, this.routeArgument}) : super(key: key);
 }
 
 class _MenuWidgetState extends StateMVC<MenuWidget> {
@@ -32,8 +33,8 @@ class _MenuWidgetState extends StateMVC<MenuWidget> {
 
   @override
   void initState() {
-    _con.market = (new Market())..id = widget.routeArgument.id;
-    _con.listenForTrendingProducts(widget.routeArgument.id);
+    _con.market = widget.routeArgument.param as Market;
+    _con.listenForTrendingProducts(_con.market.id);
     _con.listenForCategories(isFirst: 1);
     selectedCategories = [];
     /*
@@ -54,10 +55,10 @@ class _MenuWidgetState extends StateMVC<MenuWidget> {
         automaticallyImplyLeading: false,
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back, color: Theme.of(context).hintColor),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).pushNamed('/Details', arguments: RouteArgument(id: '0', param: _con.market.id, heroTag: 'menu_tab')),
         ),
         title: Text(
-          _con.products.isNotEmpty ? _con.products[0].market.name : '',
+          _con.market?.name ?? '',
           overflow: TextOverflow.fade,
           softWrap: false,
           style: Theme.of(context).textTheme.headline6.merge(TextStyle(letterSpacing: 0)),

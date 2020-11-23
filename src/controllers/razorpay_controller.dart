@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappbrowser/flutter_inappbrowser.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -22,7 +22,7 @@ class RazorPayController extends ControllerMVC {
     final String _apiToken = 'api_token=${userRepo.currentUser.value.apiToken}';
     final String _deliveryAddress = 'delivery_address_id=${settingRepo.deliveryAddress.value?.id}';
     final String _couponCode = 'coupon_code=${settingRepo.coupon?.code}';
-    url = '${GlobalConfiguration().getString('base_url')}payments/razorpay/checkout?$_apiToken&$_deliveryAddress&$_couponCode';
+    url = '${GlobalConfiguration().getValue('base_url')}payments/razorpay/checkout?$_apiToken&$_deliveryAddress&$_couponCode';
     print(url);
     setState(() {});
     super.initState();

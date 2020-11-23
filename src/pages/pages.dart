@@ -4,11 +4,11 @@ import '../elements/DrawerWidget.dart';
 import '../elements/FilterWidget.dart';
 import '../helpers/helper.dart';
 import '../models/route_argument.dart';
-import '../pages/favorites.dart';
 import '../pages/home.dart';
 import '../pages/map.dart';
 import '../pages/notifications.dart';
 import '../pages/orders.dart';
+import 'messages.dart';
 
 // ignore: must_be_immutable
 class PagesWidget extends StatefulWidget {
@@ -66,7 +66,7 @@ class _PagesWidgetState extends State<PagesWidget> {
           widget.currentPage = OrdersWidget(parentScaffoldKey: widget.scaffoldKey);
           break;
         case 4:
-          widget.currentPage = FavoritesWidget(parentScaffoldKey: widget.scaffoldKey);
+          widget.currentPage = MessagesWidget(parentScaffoldKey: widget.scaffoldKey); //FavoritesWidget(parentScaffoldKey: widget.scaffoldKey);
           break;
       }
     });
@@ -101,17 +101,18 @@ class _PagesWidgetState extends State<PagesWidget> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications),
-              title: new Container(height: 0.0),
+              label: '',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.location_on),
-              title: new Container(height: 0.0),
+              label: '',
             ),
             BottomNavigationBarItem(
-                title: new Container(height: 5.0),
+                label: '',
                 icon: Container(
                   width: 42,
                   height: 42,
+                  margin: EdgeInsets.only(bottom: 5),
                   decoration: BoxDecoration(
                     color: Theme.of(context).accentColor,
                     borderRadius: BorderRadius.all(
@@ -126,11 +127,11 @@ class _PagesWidgetState extends State<PagesWidget> {
                 )),
             BottomNavigationBarItem(
               icon: new Icon(Icons.local_mall),
-              title: new Container(height: 0.0),
+              label: '',
             ),
             BottomNavigationBarItem(
-              icon: new Icon(Icons.favorite),
-              title: new Container(height: 0.0),
+              icon: new Icon(Icons.chat),
+              label: '',
             ),
           ],
         ),
