@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -206,6 +207,15 @@ class _MenuWidgetState extends StateMVC<MenuWidget> {
                 );
               },
             ),
+            _con.stillLoading
+              ? Container(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: SpinKitThreeBounce(
+                  color: Theme.of(context).accentColor,
+                  size: 25.0,
+                )
+              )
+              : Container()
           ],
         ),
       ),

@@ -221,12 +221,14 @@ Future<Stream<Product>> getProductsOfMarket(String marketId, {List<String> categ
   }
 }
 
-Future<Stream<Product>> getProductsOfMarketSuper(String marketId, {List<String> categories}) async {
+Future<Stream<Product>> getProductsOfMarketSuper(String marketId, int limit, int offset, {List<String> categories}) async {
   Uri uri = Helper.getUri('api/products/categories_super');
   Map<String, dynamic> query = {
     'with': 'market;category;options;productReviews',
     'search': 'market_id:$marketId',
     'searchFields': 'market_id:=',
+    'limit': limit.toString(),
+    'offset': offset.toString(),
   };
 
   if (categories != null && categories.isNotEmpty) {

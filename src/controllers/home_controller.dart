@@ -38,10 +38,10 @@ class HomeController extends ControllerMVC {
     listenForFilter().whenComplete(() {
       listenForFields();
     });
-    listenForTrendingProducts();
+    // listenForTrendingProducts();
     listenForCategories();
     listenForPopularMarkets();
-    listenForRecentReviews();
+    // listenForRecentReviews();
 
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
   }

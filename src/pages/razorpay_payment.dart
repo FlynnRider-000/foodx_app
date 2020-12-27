@@ -1,5 +1,6 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/package:flutter_inappwebview.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 
@@ -42,7 +43,7 @@ class _RazorPayPaymentWidgetState extends StateMVC<RazorPayPaymentWidget> {
           InAppWebView(
             initialUrl: _con.url,
             initialHeaders: {},
-            initialOptions: new InAppWebViewWidgetOptions(androidInAppWebViewOptions: AndroidInAppWebViewOptions(textZoom: 120)),
+            initialOptions: Platform.isAndroid ? new InAppWebViewGroupOptions(android: new AndroidInAppWebViewOptions(textZoom: 120)) : new InAppWebViewGroupOptions(),
             onWebViewCreated: (InAppWebViewController controller) {
               _con.webView = controller;
             },
@@ -59,6 +60,13 @@ class _RazorPayPaymentWidgetState extends StateMVC<RazorPayPaymentWidget> {
                 _con.progress = progress / 100;
               });
               controller.getUrl().then((value) {
+                if (Platform.isIOS) {
+                  String url = value;
+                  if (url == "${GlobalConfiguration().getString('base_url')}payments/razorpay" && progress == 100) {
+                    Navigator.of(context).pushReplacementNamed('/Pages', arguments: 3);
+                    return;
+                  }
+                }
                 if(value.contains("payments.failed")) {
                   var res = value.split("payments.failed");
                   if(res.length > 1) {

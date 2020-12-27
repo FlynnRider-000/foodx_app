@@ -35,7 +35,6 @@ class _ProductItemWidgetState extends StateMVC<ProductItemWidget> {
 
   _ProductItemWidgetState() : super(ProductItemController()) {
     _con = controller;
-
   }
 
   void initState() {
@@ -163,8 +162,7 @@ class _ProductItemWidgetState extends StateMVC<ProductItemWidget> {
                           } else {
                             if (widget.product.outOfStock == false) {
                               widget.onLoadingCart(1);
-                              await _con.listenForProduct(
-                                  productId: widget.product.id);
+                              _con.product = widget.product;
                               await _con.listenForCart();
                               if (_con.isSameMarkets(_con.product)) {
                                 _con.addToCart(_con.product);

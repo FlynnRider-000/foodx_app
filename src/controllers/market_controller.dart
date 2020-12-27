@@ -26,6 +26,7 @@ class MarketController extends ControllerMVC {
   List<Review> reviews = <Review>[];
   bool loadCart = false;
   GlobalKey<ScaffoldState> scaffoldKey;
+  bool stillLoading = false;
 
   MarketController() {
     this.scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -92,14 +93,39 @@ class MarketController extends ControllerMVC {
   }
 
   void listenForProducts(String idMarket, {List<String> categoriesId}) async{
-    final Stream<Product> stream = await getProductsOfMarketSuper(idMarket, categories: categoriesId);
-    stream.listen((Product _product) {
-      setState(() => products.add(_product));
-    }, onError: (a) {
-      print(a);
-    }, onDone: () {
-      market.name = products?.elementAt(0)?.market?.name;
-    });
+    int isLoading = 0;
+    int limit = 25;
+    for( int offset = 0 ; offset < 1000 ; offset += limit ) {
+      if ( isLoading == 0) {
+        int readCnt = 0;
+        final Stream<Product> stream = await getProductsOfMarketSuper(
+            idMarket, limit, offset, categories: categoriesId);
+        stream.listen((Product _product) {
+          setState(() {
+            products.add(_product);
+            readCnt++;
+          });
+        }, onError: (a) {
+          print(a);
+        }, onDone: () {
+          market.name = products
+              ?.elementAt(0)
+              ?.market
+              ?.name;
+          if (readCnt == 0) {
+            setState(() {
+              stillLoading = false;
+            });
+            isLoading = 1;
+          }
+          else {
+            setState(() {
+              stillLoading = true;
+            });
+          }
+        });
+      }
+    }
   }
 
   void listenForTrendingProducts(String idMarket) async {
