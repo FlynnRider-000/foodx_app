@@ -103,7 +103,7 @@ class _HomeSliderWidgetState extends State<HomeSliderWidget> {
                                       FlatButton(
                                         onPressed: () {
                                           if (slide.market.id != 'null') {
-                                            Navigator.of(context).pushNamed('/Details', arguments: RouteArgument(id: slide.market.id, heroTag: 'home_slide'));
+                                            Navigator.of(context).pushNamed('/Details', arguments: RouteArgument(id: '0', param: slide.market.id, heroTag: 'home_slide'));
                                           } else if (slide.product.id != 'null') {
                                             Navigator.of(context).pushNamed('/Product', arguments: RouteArgument(id: slide.product.id, heroTag: 'home_slide'));
                                           }

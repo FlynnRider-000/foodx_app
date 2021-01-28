@@ -17,7 +17,7 @@ class GridItemWidget extends StatelessWidget {
       highlightColor: Colors.transparent,
       splashColor: Theme.of(context).accentColor.withOpacity(0.08),
       onTap: () {
-        Navigator.of(context).pushNamed('/Details', arguments: RouteArgument(id: market.id, heroTag: heroTag));
+        Navigator.of(context).pushNamed('/Details', arguments: RouteArgument(id: '0', param: market.id, heroTag: heroTag));
       },
       child: Container(
         decoration: BoxDecoration(
